@@ -1,0 +1,3 @@
+4th of November, 2023
+
+We were able to get some basic data transfer between a local server and a gamemaker client. I have a few thoughts about how to proceed with this project. Firstly I'm tempted to make some sort of very tiny MMO. Something where all you can do is wander around and... some sort of super simple game mechanic. Maybe pick up items? Talk to people? I think doing a whole battle system might be too much. 
