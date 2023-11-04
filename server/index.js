@@ -2,11 +2,13 @@ const net = require("net");
 
 const server = net.createServer((socket) => {
     console.log("Client connected");
-    socket.write("hello world");
+    socket.write("connection established");
 
     socket.on("data", (data) => {
-        const strData = data.toString();
-        console.log(`Received: ${strData}`);
+        console.log("data received");
+        console.log(data);
+        //const strData = data.toString();
+        //console.log(`Received: ${strData}`);
     });
 
     socket.on("end", () => {
