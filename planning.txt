@@ -1,3 +1,9 @@
 4th of November, 2023
 
-We were able to get some basic data transfer between a local server and a gamemaker client. I have a few thoughts about how to proceed with this project. Firstly I'm tempted to make some sort of very tiny MMO. Something where all you can do is wander around and... some sort of super simple game mechanic. Maybe pick up items? Talk to people? I think doing a whole battle system might be too much. 
+We were able to get some basic data transfer between a local server and a gamemaker client. I have a few thoughts about how to proceed with this project. Firstly I'm tempted to make some sort of very tiny MMO. Something where all you can do is wander around and... some sort of super simple game mechanic. Maybe pick up items? Talk to people? I think doing a whole battle system might be too much.
+
+I want to finally deal with the concept of accounts, and secure password storage. It looks like gamemaker is capable of doing http requests. 
+
+Used this guide to setup typescript for node.js
+https://khalilstemmler.com/blogs/typescript/node-starter-project/
+

@@ -23,6 +23,10 @@ socketServer.on("error", (error) => {
 
 const port = 5000;
 
-socketServer.listen(port, () => {
-    console.log(`TCP socket server is running on port: ${port}`);
-});
+export const startSocketServer = () => {
+    socketServer.listen(port, () => {
+        console.log(`TCP socket server is running on port: ${port}`);
+    });
+};
+
+export default startSocketServer;
