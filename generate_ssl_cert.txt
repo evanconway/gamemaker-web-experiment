@@ -1,0 +1,6 @@
+These commands generate a key and self signed certificate
+
+openssl genrsa -out tutorial.key 2048
+openssl rsa -in tutorial.key -pubout -out tutorial_public.key
+openssl req -new -key tutorial.key -out tutorial.csr
+openssl x509 -in tutorial.csr -out tutorial.crt -req -signkey tutorial.key -days 365
