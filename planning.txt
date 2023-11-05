@@ -10,4 +10,10 @@ https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
 5th of November, 2023
 
-We've got the client and the server talking to eachother. I'm still stuck on what sort of game to make. I like the idea of something that doesn't require a ton of state synching since that's a lot to accomplish before Thursday. Oh I should've mentioned I have this goal of something playable to present by Thursday. 
+We've got the client and the server talking to eachother. I'm still stuck on what sort of game to make. I like the idea of something that doesn't require a ton of state synching since that's a lot to accomplish before Thursday. Oh I should've mentioned I have this goal of something playable to present by Thursday.
+
+Fixed some bugs where browser based exports weren't using a web socket connection. That involved adding a web socket server but I don't think it's a big deal. This was important because now we should be able to export as a web browser game, and anyone can play easily.
+
+I'm still thinking about my mini MMO idea, and I have one idea for how to handle state. What if the game was actually defined and run in the server, and the client is simply a remote controller and renderer. The game could state coule be something totally serializable. Something that could be stored in JSON. The server could send updates to the player whenever the game world state changed, such as an enemy or player moving, or whatever. And the client sends controller input to the server. This will probably end up feeling really laggy, but at the very least it would be consistent. And might be a good way to do a "first go" at this.
+
+We'd have to figure out a way to render the game world from json data. No more creating rooms right in game maker. Maybe that could be tomorrow's project. Create a json level that can be sent from the server to the client, and a way for the client to render it. And if we're feeling really ambitious, add some form of controllable player.
