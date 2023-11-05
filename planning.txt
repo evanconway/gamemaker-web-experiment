@@ -18,6 +18,9 @@ I'm still thinking about my mini MMO idea, and I have one idea for how to handle
 
 We'd have to figure out a way to render the game world from json data. No more creating rooms right in game maker. Maybe that could be tomorrow's project. Create a json level that can be sent from the server to the client, and a way for the client to render it. And if we're feeling really ambitious, add some form of controllable player.
 
-
 I've got a node server running, and I'm trying to send data to it through `http_request`. I've tested it with Postman and the server correctly receives requests and prints whatever's in the body of the request. It also receives requests from my GameMaker client, but it doesn't print the body correctly. 
+
+I was able to almost completely fix the http_request invisible body bug. Firstly, the server didn't have CORS configured, so the browser didn't trust anything it was getting back from the server. And since it sends a preflight request before sending the "real" request, the preflight would fail and the real request never made it to the server. Also the mothod for my request was GET. The method POST is what's designed to have a body, and changing the gamemaker method to POST seems to have fixed it in almost all cases. 
+
+For some reason it's still not working on GX Games export in chrome?
 
