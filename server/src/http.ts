@@ -14,16 +14,16 @@ const server = http.createServer((req, res) => {
 	let body = '';
 
 	res.writeHead(200, {
-		'access-control-allow-origin': 'http://127.0.0.1:51264',
+		'access-control-allow-origin': '*',
 		'access-control-allow-headers': 'content-type',
 	});
 
 	req.on('data', (chunk) => {
-		console.log(`chunk: ${chunk}`);
-		body += chunk;
+        body += chunk;
 	});
+
 	req.on('end', () => {
-		console.log(`body: ${body}`);
+		console.log(body);
 		res.write('OK'); 
 		res.end(JSON.stringify({ data: 'Hello World!' }));
 	});
