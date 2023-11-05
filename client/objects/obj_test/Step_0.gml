@@ -8,9 +8,9 @@ if (keyboard_check_pressed(vk_space)) {
 }
 
 if (keyboard_check_pressed(vk_enter)) {
+	var data = json_stringify({ gamemaker_data: "I'm all the cool data" });
 	var map = ds_map_create();
 	ds_map_add(map, "Content-Type", "application/json");
-	var data = json_stringify({ gamemaker_data: "I'm all the cool data" });
 	var request_id = http_request("http://localhost:8000", "GET", map, data);
 	ds_map_destroy(map);
 }
