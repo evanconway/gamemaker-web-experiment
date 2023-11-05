@@ -1,13 +1,15 @@
-import http from 'http';
 import https from 'https';
-const fs = require('node:fs');
+import fs from 'fs';
 
 const options = {
   key: fs.readFileSync('private_keys/private.key'),
   cert: fs.readFileSync('private_keys/signed_cert.crt'),
 };
-// Create a local server to receive data from
+
 const server = https.createServer(options, (req, res) => {
+  console.log("http received");
+  console.log(req.url);
+
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({
     data: 'Hello World!',

@@ -5,7 +5,7 @@ const socketServer = net.createServer((socket) => {
     socket.write("connection established");
 
     socket.on("data", (data) => {
-        console.log(`Received: "${data.toString()}"`);
+        console.log(`socket received: "${data.toString()}"`);
     });
 
     socket.on("end", () => {
