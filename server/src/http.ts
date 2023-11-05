@@ -1,3 +1,4 @@
+import http from 'http';
 import https from 'https';
 import fs from 'fs';
 
@@ -6,7 +7,7 @@ const options = {
   cert: fs.readFileSync('private_keys/signed_cert.crt'),
 };
 
-const server = https.createServer(options, (req, res) => {
+const server = http.createServer((req, res) => {
   console.log("http received");
   console.log(req.url);
 

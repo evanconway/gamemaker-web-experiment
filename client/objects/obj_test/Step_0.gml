@@ -10,7 +10,7 @@ if (keyboard_check_pressed(vk_space)) {
 if (keyboard_check_pressed(vk_enter)) {
 	var map = ds_map_create();
 	var data = "http data";
-	var request_id = http_request("https://localhost:8000", "GET", map, data);
+	var request_id = http_request("http://localhost:8000", "GET", map, data);
 	show_debug_message($"http request made id: {request_id}");
 }
 
