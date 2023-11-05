@@ -1,11 +1,12 @@
 import net from "net";
+import { WebSocketServer } from 'ws';
 
-const socketServer = net.createServer((socket) => {
-    console.log("Client connected");
-    socket.write("connection established");
+const socketTCPServer = net.createServer((socket) => {
+    console.log("TCP Client connected");
+    socket.write("tcp connection established");
 
     socket.on("data", (data) => {
-        console.log(`socket received: "${data.toString()}"`);
+        console.log(`tcp socket received: "${data.toString()}"`);
     });
 
     socket.on("end", () => {
@@ -17,14 +18,31 @@ const socketServer = net.createServer((socket) => {
     });
 });
 
-socketServer.on("error", (error) => {
+socketTCPServer.on("error", (error) => {
     console.log(`Server Error: ${error.message}`);
 });
 
 const port = 5000;
 
+const socketWebServer = new WebSocketServer({ port: port + 1 }, () => {
+    console.log(`WEB socket server is running on port: ${port + 1}`);
+});
+
+socketWebServer.on('connection', function connection(ws) {
+    console.log("WEB Client connected")
+    ws.send("web connection established");
+
+    ws.on('error', console.error);
+  
+    ws.on('message', function message(data) {
+      console.log('received: %s', data);
+    });
+
+    ws.on("close", () => console.log("Client disconnected"));
+});
+
 export const startSocketServer = () => {
-    socketServer.listen(port, () => {
+    socketTCPServer.listen(port, () => {
         console.log(`TCP socket server is running on port: ${port}`);
     });
 };

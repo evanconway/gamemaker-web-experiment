@@ -7,3 +7,7 @@ I want to finally deal with the concept of accounts, and secure password storage
 Used this guide to setup typescript for node.js
 https://khalilstemmler.com/blogs/typescript/node-starter-project/
 
+
+5th of November, 2023
+
+We've got the client and the server talking to eachother. I'm still stuck on what sort of game to make. I like the idea of something that doesn't require a ton of state synching since that's a lot to accomplish before Thursday. Oh I should've mentioned I have this goal of something playable to present by Thursday. 

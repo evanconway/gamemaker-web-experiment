@@ -1,8 +1,9 @@
-socket = network_create_socket(network_socket_tcp);
-network_connect_raw_async(socket, "localhost", 5000);
+var use_browser = os_type == os_gxgames || os_browser != browser_not_a_browser;
 
-show_debug_message("network types");
-show_debug_message("network_type_connect: " + string(network_type_connect));
-show_debug_message("network_type_disconnect: " + string(network_type_disconnect));
-show_debug_message("network_type_data: " + string(network_type_data));
-show_debug_message("network_type_non_blocking_connect: " + string(network_type_non_blocking_connect));
+show_debug_message($"use_browser: {use_browser}\nos_type: {os_type}");
+
+var socket_type = use_browser ? network_socket_ws : network_socket_tcp;
+var port = use_browser ? 5001 : 5000;
+
+socket = network_create_socket(socket_type);
+var result = network_connect_raw_async(socket, "localhost", port);
