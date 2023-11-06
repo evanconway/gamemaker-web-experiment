@@ -67,3 +67,6 @@ I want to keep the http request around because I know we'll want to use that in 
 Is there no way to gracefully close a socket connection in gamemaker??
 
 
+6th of November, 2023
+
+We just added player movement, which correctly updates the state of all other connected clients. Let's take a break then assess what to do next.
