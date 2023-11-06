@@ -22,5 +22,42 @@ I've got a node server running, and I'm trying to send data to it through `http_
 
 I was able to almost completely fix the http_request invisible body bug. Firstly, the server didn't have CORS configured, so the browser didn't trust anything it was getting back from the server. And since it sends a preflight request before sending the "real" request, the preflight would fail and the real request never made it to the server. Also the mothod for my request was GET. The method POST is what's designed to have a body, and changing the gamemaker method to POST seems to have fixed it in almost all cases. 
 
-For some reason it's still not working on GX Games export in chrome?
+For some reason it's still not working on GX Games export in chrome? Very annoying, but since it works fine on every other export I'm tempted to not worry about this yet. We'll come back to this. For now let's think about how we want state to work in game.
+
+I have an idea to get multiple boxes moving around. First, let's imagine the entire state of the game is serializeable so that it can be easily shipped over the web. And for now our only game entities are players, and their entire state will be this:
+
+{
+	player_id: string,
+	position_x: real,
+	position_y: real,
+	player_color: color.
+}
+
+We could store these player objects in a struct, where the key for each player is their id. If there were 3 players in the game, the entire game state could look like this:
+
+{
+	40ed49ac-2181-4bf9-982b-032e7508fd86: {
+		player_id: 40ed49ac-2181-4bf9-982b-032e7508fd86,
+		position_x: 87,
+		position_y: 12,
+		player_color: blue,
+	},
+	9f9132af-26b5-4c3a-bca4-632e010c9595: {
+		player_id: 9f9132af-26b5-4c3a-bca4-632e010c9595,
+		position_x: 99,
+		position_y: 4,
+		player_color: blue,
+	},
+	a1ed9157-9c15-49a0-a08d-43bec6eafff7: {
+		player_id: a1ed9157-9c15-49a0-a08d-43bec6eafff7,
+		position_x: 32,
+		position_y: 9,
+		player_color: blue,
+	},
+}
+
+Whenever the game state on the server updates, we could ship it to all players (probably using our TCP socket network?). When the clients receive this information they'll simply overwrite whatever internal gamestate they have, and replace it with this one. And so on the draw cycle each client will see an updated game state.
+
+But the players need to be able to move themselves around. So when a player changes their position, we'll send a message to the server to update their gamestate by the correct values. I think there are issues with lage, and relying on the server to tak input and update positions, but let's start with this. Once that's working we can try doing fancy stuff where we don't overwrite the players own state when pulling from the server.
+
 
