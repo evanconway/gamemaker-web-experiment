@@ -12,7 +12,11 @@ interface PlayerPosition {
 interface Player {
     player_id: string,
     position: PlayerPosition,
-    player_color: string,
+    player_color: {
+        red: number,
+        green: number,
+        blue: number,
+    },
 }
 
 type Players = Record<string, Player>;
@@ -45,14 +49,17 @@ class Game {
 
     addPlayer() {
         const newPlayerId = uuid();
-        const newPlayerColor = Math.floor(Math.random()*16777215).toString(16);
         this.state.players[newPlayerId] = {
             player_id: newPlayerId,
             position: {
                 position_x: Math.floor(Math.random() * (WORLD_WIDTH - PLAYER_WIDTH)),
                 position_y: Math.floor(Math.random() * (WORLD_HEIGHT - PLAYER_WIDTH)),
             },
-            player_color: newPlayerColor,
+            player_color: {
+                red: Math.floor(Math.random() * 256),
+                green: Math.floor(Math.random() * 256),
+                blue: Math.floor(Math.random() * 256),
+            },
         };
         this.printState();
         return newPlayerId;
