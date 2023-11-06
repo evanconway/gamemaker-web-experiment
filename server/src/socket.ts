@@ -1,5 +1,8 @@
 import net from "net";
+import { v4 as uuid } from "uuid";
 import { WebSocketServer } from 'ws';
+
+
 
 const socketTCPServer = net.createServer((socket) => {
     console.log("TCP Client connected");
@@ -31,12 +34,12 @@ const socketWebServer = new WebSocketServer({ port: port + 1 }, () => {
 socketWebServer.on('connection', function connection(ws) {
     console.log("WEB Client connected")
     ws.send("web connection established");
-
-    ws.on('error', console.error);
   
     ws.on('message', function message(data) {
       console.log('received: %s', data);
     });
+
+    ws.on('error', console.error);
 
     ws.on("close", () => console.log("Client disconnected"));
 });

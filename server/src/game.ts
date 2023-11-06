@@ -1,4 +1,8 @@
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
+
+const WORLD_WIDTH = 320;
+const WORLD_HEIGHT = 180;
+const PLAYER_WIDTH = 16;
 
 interface PlayerPosition {
     position_x: number,
@@ -16,15 +20,9 @@ type GameStateChangeCallback = (newState: GameState) => void;
 
 class Game {
     state: GameState;
-    onStateChangeCallback: GameStateChangeCallback;
 
-    constructor(newOnStateChangeCallback: GameStateChangeCallback) {
+    constructor() {
         this.state = {};
-        this.onStateChangeCallback = newOnStateChangeCallback;
-    }
-
-    stateUpdated() {
-        this.onStateChangeCallback(this.state);
     }
 
     addPlayer() {
@@ -33,19 +31,17 @@ class Game {
         this.state[newPlayerId] = {
             player_id: newPlayerId,
             position: {
-                position_x: 0,
-                position_y: 0,
+                position_x: Math.floor(Math.random() * (WORLD_WIDTH - PLAYER_WIDTH)),
+                position_y: Math.floor(Math.random() * (WORLD_HEIGHT - PLAYER_WIDTH)),
             },
             player_color: newPlayerColor,
         };
-        this.stateUpdated();
         return newPlayerId;
     }
 
     updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
         if (this.state[playerId] === undefined) return;
         this.state[playerId].position = newPosition;
-        this.stateUpdated();
     }
 
     deletePlayer(playerId: string) {
@@ -54,8 +50,13 @@ class Game {
             if (key !== playerId) filteredState[key] = this.state[key];
         }
         this.state = filteredState;
-        this.stateUpdated();
+    }
+
+    toJSONString() {
+        return JSON.stringify(this.state);
     }
 }
 
-export default Game;
+const game = new Game();
+
+export default game;

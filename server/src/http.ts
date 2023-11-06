@@ -1,6 +1,7 @@
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
+import game from './game';
 
 const port = 8000;
 
@@ -10,22 +11,29 @@ const port = 8000;
 // };
 
 const server = http.createServer((req, res) => {
-	console.log("http received");
+	console.log("http received: ", req.url);
 	let body = '';
+
+	req.on('data', (chunk) => {
+        body += chunk;
+	});
+
+	const resObj: Record<string, string | number> = {};
+
+	if (req.url === '/start') {
+		const playerId = game.addPlayer();
+		resObj["player_id"] = playerId;
+	}
 
 	res.writeHead(200, {
 		'access-control-allow-origin': '*',
 		'access-control-allow-headers': 'content-type',
 	});
 
-	req.on('data', (chunk) => {
-        body += chunk;
-	});
-
 	req.on('end', () => {
-		console.log(body);
-		res.write('OK'); 
-		res.end(JSON.stringify({ data: 'Hello World!' }));
+		if (body.length > 0) console.log('body:', body);
+		console.log(game.toJSONString());
+		res.end(JSON.stringify(resObj));
 	});
 });
 

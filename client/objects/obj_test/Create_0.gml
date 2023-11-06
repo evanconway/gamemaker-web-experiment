@@ -7,3 +7,6 @@ var port = use_browser ? 5001 : 5000;
 
 socket = network_create_socket(socket_type);
 var result = network_connect_raw_async(socket, "localhost", port);
+
+my_player_id = "";
+request_player_id_request_id = http_request("http://localhost:8000/start", "GET", ds_map_create(), "");
