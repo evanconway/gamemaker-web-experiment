@@ -1,9 +1,6 @@
 if (keyboard_check_pressed(vk_space)) {
-	var data = "socket data";
-	var size = string_byte_length(data) + 1;
-	var buffer = buffer_create(size, buffer_fixed, 1);
-	buffer_write(buffer, buffer_string, data);
-	network_send_raw(socket, buffer, size);
+	var buffer = struct_to_buffer({ socket_data: "I'm socket data" });
+	network_send_raw(socket, buffer, buffer_get_size(buffer));
 	buffer_delete(buffer);
 }
 
@@ -13,5 +10,7 @@ if (keyboard_check_pressed(vk_enter)) {
     var request_id = http_request("http://localhost:8000", "POST", map, data);
     ds_map_destroy(map);
 }
+
+if (keyboard_check_pressed(ord("S"))) network_destroy(socket);
 
 if (keyboard_check_pressed(ord("Q"))) game_end();

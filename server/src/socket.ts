@@ -2,14 +2,17 @@ import net from "net";
 import { v4 as uuid } from "uuid";
 import { WebSocketServer } from 'ws';
 
-
-
 const socketTCPServer = net.createServer((socket) => {
+    let socket_player_id = "";
     console.log("TCP Client connected");
     socket.write("tcp connection established");
 
     socket.on("data", (data) => {
-        console.log(`tcp socket received: "${data.toString()}"`);
+        const rawString = data.toString();
+        const dataString = rawString.slice(0, rawString.length - 1);
+        const dataObj = JSON.parse(dataString);
+        console.log(`tcp socket received:`);
+        console.log(dataObj);
     });
 
     socket.on("end", () => {
@@ -32,6 +35,7 @@ const socketWebServer = new WebSocketServer({ port: port + 1 }, () => {
 });
 
 socketWebServer.on('connection', function connection(ws) {
+    let socket_player_id = "";
     console.log("WEB Client connected")
     ws.send("web connection established");
   

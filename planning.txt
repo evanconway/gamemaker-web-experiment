@@ -63,3 +63,7 @@ But the players need to be able to move themselves around. So when a player chan
 Right now I have it rigged up so hitting an http endpoint will create the player. I want the player to exist in the world for as long as the client is running. So as soon as they quit the player should be removed. The only way I have to check that is on error or connection end for the socket connections. But since the http request and the socket connections don't know about eachother, how will the socket connection know which player id to remove and update? I almost wonder if we shouldn't even use the http request yet.
 
 I want to keep the http request around because I know we'll want to use that in the future. Actually how about this, we'll leave it so that only tcp/web socket connection error or end can remove players. And we'll simply not start the tcp/websocket connection until the client has gotten their player id. And once the socket connection is established, we'll have the client send the server the player id it got earlier, and from there we'll be able to connect the socket connection with a player id.
+
+Is there no way to gracefully close a socket connection in gamemaker??
+
+
