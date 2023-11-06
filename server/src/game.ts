@@ -25,6 +25,17 @@ class Game {
         this.state = {};
     }
 
+    toJSONString() {
+        return JSON.stringify(this.state);
+    }
+
+    printState() {
+        const bar = '---------------';
+        console.log(bar, 'NEW GAME STATE', bar);
+        console.log(this.toJSONString());
+        console.log(bar, '--------------', bar, '\n');
+    }
+
     addPlayer() {
         const newPlayerId = uuid();
         const newPlayerColor = Math.floor(Math.random()*16777215).toString(16);
@@ -36,12 +47,14 @@ class Game {
             },
             player_color: newPlayerColor,
         };
+        this.printState();
         return newPlayerId;
     }
 
     updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
         if (this.state[playerId] === undefined) return;
         this.state[playerId].position = newPosition;
+        this.printState();
     }
 
     deletePlayer(playerId: string) {
@@ -50,10 +63,7 @@ class Game {
             if (key !== playerId) filteredState[key] = this.state[key];
         }
         this.state = filteredState;
-    }
-
-    toJSONString() {
-        return JSON.stringify(this.state);
+        this.printState();
     }
 }
 

@@ -1,6 +1,7 @@
 import net from "net";
 import { v4 as uuid } from "uuid";
 import { WebSocketServer } from 'ws';
+import game from "./game";
 
 const socketTCPServer = net.createServer((socket) => {
     let socket_player_id = "";
@@ -13,14 +14,21 @@ const socketTCPServer = net.createServer((socket) => {
         const dataObj = JSON.parse(dataString);
         console.log(`tcp socket received:`);
         console.log(dataObj);
+
+        if (dataObj['event'] === 'connect_player_id') {
+            socket_player_id = dataObj['player_id'];
+        }
+
     });
 
     socket.on("end", () => {
         console.log("Client disconnected");
+        game.deletePlayer(socket_player_id);
     });
 
     socket.on("error", (error) => {
-        console.log(`Socket Error: ${error.message}`);
+        console.log(`Socket Error: "${error.message}"`);
+        game.deletePlayer(socket_player_id);
     });
 });
 

@@ -32,7 +32,6 @@ const server = http.createServer((req, res) => {
 
 	req.on('end', () => {
 		if (body.length > 0) console.log('body:', body);
-		console.log(game.toJSONString());
 		res.end(JSON.stringify(resObj));
 	});
 });
