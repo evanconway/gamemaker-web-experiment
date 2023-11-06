@@ -4,10 +4,10 @@ import fs from 'fs';
 
 const port = 8000;
 
-const options = {
-	key: fs.readFileSync('private_keys/private.key'),
-	cert: fs.readFileSync('private_keys/signed_cert.crt'),
-};
+// const options = {
+// 	key: fs.readFileSync('private_keys/private.key'),
+// 	cert: fs.readFileSync('private_keys/signed_cert.crt'),
+// };
 
 const server = http.createServer((req, res) => {
 	console.log("http received");
