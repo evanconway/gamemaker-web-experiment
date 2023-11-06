@@ -18,6 +18,7 @@ for (var i = 0; i < array_length(keys); i++) {
 
 if (type == network_type_non_blocking_connect) {
 	show_debug_message($"Socket connection established!");
+	
 	// send player id once connection is established
 	if (my_player_id != "") {
 		var buffer = struct_to_buffer({
