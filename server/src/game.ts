@@ -15,14 +15,21 @@ interface Player {
     player_color: string,
 }
 
-type GameState = Record<string, Player>;
+type Players = Record<string, Player>;
+
+type GameState = {
+    players: Players,
+};
+
 type GameStateChangeCallback = (newState: GameState) => void;
 
 class Game {
     state: GameState;
 
     constructor() {
-        this.state = {};
+        this.state = {
+            players: {}
+        };
     }
 
     toJSONString() {
@@ -39,7 +46,7 @@ class Game {
     addPlayer() {
         const newPlayerId = uuid();
         const newPlayerColor = Math.floor(Math.random()*16777215).toString(16);
-        this.state[newPlayerId] = {
+        this.state.players[newPlayerId] = {
             player_id: newPlayerId,
             position: {
                 position_x: Math.floor(Math.random() * (WORLD_WIDTH - PLAYER_WIDTH)),
@@ -52,17 +59,17 @@ class Game {
     }
 
     updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
-        if (this.state[playerId] === undefined) return;
-        this.state[playerId].position = newPosition;
+        if (this.state.players[playerId] === undefined) return;
+        this.state.players[playerId].position = newPosition;
         this.printState();
     }
 
     deletePlayer(playerId: string) {
-        const filteredState: GameState = {};
-        for (const key in this.state) {
-            if (key !== playerId) filteredState[key] = this.state[key];
+        const filteredPlayers: Players = {};
+        for (const key in this.state.players) {
+            if (key !== playerId) filteredPlayers[key] = this.state.players[key];
         }
-        this.state = filteredState;
+        this.state.players = filteredPlayers;
         this.printState();
     }
 }

@@ -12,9 +12,12 @@ const socketTCPServer = net.createServer((socket) => {
         const rawString = data.toString();
         const dataString = rawString.slice(0, rawString.length - 1);
         const dataObj = JSON.parse(dataString);
-        console.log(`tcp socket received:`);
-        console.log(dataObj);
+        console.log(`tcp socket received:`, dataObj);
         if (dataObj['event'] === 'connect_player_id') socket_player_id = dataObj['player_id'];
+        socket.write(JSON.stringify({
+            event: 'game_state',
+            game_state: game.state,
+        }));
     });
 
     socket.on("end", () => {
@@ -47,9 +50,12 @@ socketWebServer.on('connection', function connection(ws) {
         const rawString = data.toString();
         const dataString = rawString.slice(0, rawString.length - 1);
         const dataObj = JSON.parse(dataString);
-        console.log(`web socket received:`);
-        console.log(dataObj);
+        console.log(`web socket received:`, dataObj);
         if (dataObj['event'] === 'connect_player_id') socket_player_id = dataObj['player_id'];
+        ws.send(JSON.stringify({
+            event: 'game_state',
+            game_state: game.state,
+        }));
     });
 
     ws.on('error', (err) => {

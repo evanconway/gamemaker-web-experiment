@@ -31,8 +31,17 @@ if (type == network_type_non_blocking_connect) {
 
 if (type == network_type_data) {
 	var buffer = ds_map_find_value(async_load, "buffer");
-	var data = buffer_read(buffer, buffer_string);
-	show_debug_message($"Data received: {data}");
+	var json_string = buffer_read(buffer, buffer_string);
+	show_debug_message($"Data received: {json_string}");
+	var data = {};
+	try {
+		data = json_parse(json_string);
+	} catch(err) {}
+	var event = is_struct(data) && variable_struct_exists(data, "event") ? variable_struct_get(data, "event") : "";
+	if (event == "game_state") {
+		state =  variable_struct_get(data, "game_state");
+		show_debug_message(state);
+	}
 }
 
 show_debug_message("end async network event\n");
