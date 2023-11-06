@@ -9,6 +9,7 @@ interface PlayerPosition {
     position_y: number,
 }
 
+// this data gets sent to GameMaker, which favors snake case
 interface Player {
     player_id: string,
     position: PlayerPosition,
@@ -21,30 +22,36 @@ interface Player {
 
 type Players = Record<string, Player>;
 
-type GameState = {
+interface GameState {
     players: Players,
 };
 
-type GameStateChangeCallback = (newState: GameState) => void;
+export type GameStateChangeCallback = (newState: GameState) => void;
+
+interface GameStateChangeIdCBPairing {
+    playerId: string,
+    callback: GameStateChangeCallback,
+}
 
 class Game {
     state: GameState;
+    onChangeCallbacks: Array<GameStateChangeIdCBPairing>;
 
     constructor() {
-        this.state = {
-            players: {}
-        };
+        this.state = { players: {} };
+        this.onChangeCallbacks = [];
     }
 
-    toJSONString() {
-        return JSON.stringify(this.state);
+    addCallback(gameStateChangeCallback: GameStateChangeIdCBPairing) {
+        this.onChangeCallbacks.push(gameStateChangeCallback);
     }
 
-    printState() {
+    handleStateChanged() {
         const bar = '---------------';
         console.log(bar, 'NEW GAME STATE', bar);
-        console.log(this.toJSONString());
+        console.log(JSON.stringify({ state: this.state, callbackPairs: this.onChangeCallbacks }));
         console.log(bar, '--------------', bar, '\n');
+        this.onChangeCallbacks.forEach(cb => cb.callback(this.state));
     }
 
     addPlayer() {
@@ -61,14 +68,14 @@ class Game {
                 blue: Math.floor(Math.random() * 256),
             },
         };
-        this.printState();
+        this.handleStateChanged();
         return newPlayerId;
     }
 
     updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
         if (this.state.players[playerId] === undefined) return;
         this.state.players[playerId].position = newPosition;
-        this.printState();
+        this.handleStateChanged();
     }
 
     deletePlayer(playerId: string) {
@@ -77,7 +84,8 @@ class Game {
             if (key !== playerId) filteredPlayers[key] = this.state.players[key];
         }
         this.state.players = filteredPlayers;
-        this.printState();
+        this.onChangeCallbacks = this.onChangeCallbacks.filter(cb => cb.playerId !== playerId);
+        this.handleStateChanged();
     }
 }
 

@@ -1,7 +1,7 @@
 import net from "net";
 import { v4 as uuid } from "uuid";
 import { WebSocketServer } from 'ws';
-import game from "./game";
+import game, { GameStateChangeCallback } from "./game";
 
 const socketTCPServer = net.createServer((socket) => {
     let socket_player_id = "";
@@ -13,11 +13,20 @@ const socketTCPServer = net.createServer((socket) => {
         const dataString = rawString.slice(0, rawString.length - 1);
         const dataObj = JSON.parse(dataString);
         console.log(`tcp socket received:`, dataObj);
-        if (dataObj['event'] === 'connect_player_id') socket_player_id = dataObj['player_id'];
-        socket.write(JSON.stringify({
-            event: 'game_state',
-            game_state: game.state,
-        }));
+
+        const sendStateToPlayer: GameStateChangeCallback = state => socket.write(
+            JSON.stringify({
+                event: 'game_state',
+                game_state: state,
+            }),
+        );
+
+        if (dataObj['event'] === 'connect_player_id') {
+            socket_player_id = dataObj['player_id'];
+            game.addCallback({ playerId: socket_player_id, callback: sendStateToPlayer });
+        }
+
+        sendStateToPlayer(game.state);
     });
 
     socket.on("end", () => {
@@ -51,11 +60,20 @@ socketWebServer.on('connection', function connection(ws) {
         const dataString = rawString.slice(0, rawString.length - 1);
         const dataObj = JSON.parse(dataString);
         console.log(`web socket received:`, dataObj);
-        if (dataObj['event'] === 'connect_player_id') socket_player_id = dataObj['player_id'];
-        ws.send(JSON.stringify({
-            event: 'game_state',
-            game_state: game.state,
-        }));
+
+        const sendStateToPlayer: GameStateChangeCallback = state => ws.send(
+            JSON.stringify({
+                event: 'game_state',
+                game_state: state,
+            }),
+        );
+
+        if (dataObj['event'] === 'connect_player_id') {
+            socket_player_id = dataObj['player_id'];
+            game.addCallback({ playerId: socket_player_id, callback: sendStateToPlayer });
+        }
+
+        sendStateToPlayer(game.state);
     });
 
     ws.on('error', (err) => {
