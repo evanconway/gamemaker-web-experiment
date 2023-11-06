@@ -25,6 +25,12 @@ const socketTCPServer = net.createServer((socket) => {
             socket_player_id = dataObj['player_id'];
             game.addCallback({ playerId: socket_player_id, callback: sendStateToPlayer });
         }
+        if (dataObj['event'] === 'player_update_position') {
+            game.updatePlayerPosition(dataObj['player_id'], { 
+                position_x: dataObj['position_x'], 
+                position_y: dataObj['position_y'],
+            });
+        }
 
         sendStateToPlayer(game.state);
     });
@@ -71,6 +77,12 @@ socketWebServer.on('connection', function connection(ws) {
         if (dataObj['event'] === 'connect_player_id') {
             socket_player_id = dataObj['player_id'];
             game.addCallback({ playerId: socket_player_id, callback: sendStateToPlayer });
+        }
+        if (dataObj['event'] === 'player_update_position') {
+            game.updatePlayerPosition(dataObj['player_id'], { 
+                position_x: dataObj['position_x'], 
+                position_y: dataObj['position_y'],
+            });
         }
 
         sendStateToPlayer(game.state);

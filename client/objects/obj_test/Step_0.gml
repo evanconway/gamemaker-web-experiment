@@ -10,3 +10,30 @@ if (keyboard_check_pressed(vk_enter)) {
     var request_id = http_request("http://localhost:8000", "POST", map, data);
     ds_map_destroy(map);
 }
+
+// handle movement
+var vel_x = 0;
+var vel_y = 0;
+
+var vel = 5;
+
+if (keyboard_check(vk_left)) vel_x -= vel;
+if (keyboard_check(vk_right)) vel_x += vel;
+if (keyboard_check(vk_up)) vel_y -= vel;
+if (keyboard_check(vk_down)) vel_y += vel;
+
+var players = variable_struct_exists(state, "players") ? variable_struct_get(state, "players") : {};
+var player = variable_struct_exists(players, my_player_id) ? variable_struct_get(players, my_player_id) : undefined;
+
+if (player != undefined && (vel_x != 0 || vel_y != 0)) {
+	var position_x = player.position.position_x + vel_x;
+	var position_y = player.position.position_y + vel_y;
+	var buffer = struct_to_buffer({
+		event: "player_update_position",
+		player_id: my_player_id,
+		position_x: position_x,
+		position_y: position_y,
+	});
+	network_send_raw(socket, buffer, buffer_get_size(buffer));
+	buffer_delete(buffer);
+}
