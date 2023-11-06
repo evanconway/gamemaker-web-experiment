@@ -14,11 +14,7 @@ const socketTCPServer = net.createServer((socket) => {
         const dataObj = JSON.parse(dataString);
         console.log(`tcp socket received:`);
         console.log(dataObj);
-
-        if (dataObj['event'] === 'connect_player_id') {
-            socket_player_id = dataObj['player_id'];
-        }
-
+        if (dataObj['event'] === 'connect_player_id') socket_player_id = dataObj['player_id'];
     });
 
     socket.on("end", () => {
@@ -48,12 +44,23 @@ socketWebServer.on('connection', function connection(ws) {
     ws.send("web connection established");
   
     ws.on('message', function message(data) {
-      console.log('received: %s', data);
+        const rawString = data.toString();
+        const dataString = rawString.slice(0, rawString.length - 1);
+        const dataObj = JSON.parse(dataString);
+        console.log(`web socket received:`);
+        console.log(dataObj);
+        if (dataObj['event'] === 'connect_player_id') socket_player_id = dataObj['player_id'];
     });
 
-    ws.on('error', console.error);
+    ws.on('error', (err) => {
+        console.error(err.message);
+        game.deletePlayer(socket_player_id);
+    });
 
-    ws.on("close", () => console.log("Client disconnected"));
+    ws.on("close", () => {
+        console.log("Client disconnected");
+        game.deletePlayer(socket_player_id);
+    });
 });
 
 export const startSocketServer = () => {
