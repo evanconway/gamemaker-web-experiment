@@ -93,3 +93,27 @@ But how would the server manage state for players in a game? We obviously don't 
 These are the questions we need to think through tomorrow.
 
 Ooh, one more thought. I wonder if we could turn this into a type racer clone instead??
+
+
+(later that day)
+
+Just for now, let's leave the position and color values in the player state. But we definitely need to add a game_id field to the player. I think we could also add a "ready" field, which the client could set to indicate that the player is ready to be queued. 
+
+I was thinking of how to define a queued player, but it just occured to me we shouldn't add players to the queue until they've clicked ready.
+
+Oh, perhaps instead of a "ready" field we just have the "queue" field. This would be their spot in the queue. If their value is -1 they're simply not queued, and the server is waiting for the client to send a "ready" event. When that happens the server will add them to the queue.
+
+Yes, players have a "queue" and "game_id". They start out with both values as -1. We'll setup the client so players can click "ready", which will make a request to the server to queue them. The server will assign them a queue value. Players will be sorted in the server based on queue value and once enough players are queue, the server will take the top x number of players from the queue and assign them a game_id. I think we could also unassign them queue values at this point. 
+
+The server will also need a way to run the games. When creating a game_id the server will also need to add this id to an array or something to keep track of existing games. Oh wait. Perhaps Games would be objects themselves which contain an id, and the players involved in that game. 
+
+I suppose we could simply rig up the clients so they send events with a game_id associated during gameplay. So when a player state changes, if it's associated with a game, the server knows which other player connections to send gamestate updates to.
+
+
+Hmmm... I have an idea for testing. Let's just let the clients send a "win" event to the server. So for now instead of coding an actual game with a win condition, this'll let us test out games starting and ending.
+
+Ok I've got it. Add game_id and queue fields to the players. Add functionality to the server so it can send gamestate to clients indicating if they are waiting to ready, queued, or in-game. Setup the server so it can create games, and send that information to players. And add client update events to tell the server someone's won a game, and make the server able to respond to that to close the game and reset queue/ready data for involved players. 
+
+Ah, important book keeping note. Let's not call it game_id. Let's call it match_id. And let's start calling them "matches". Although the word "game" is totally appropriate, we've already named a lot of our infrastructure "game". And I think the term "match" much more immediately and accurately describes exactly what it is.
+
+I'm looking over how we send data to the players. Originally I had this weird callback system because we had different socket connections. But now I think we could simply associate a connection with a player. However, it's clear to me that we want to tailor the exact state sent to players based on current game state. Perhaps we'll still associate a socket connection with a player, but we'll create a function specifically for sending state using that socket instead of ever really referencing it in the game logic.
