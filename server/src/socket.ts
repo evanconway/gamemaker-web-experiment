@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import game, { GameStateChangeCallback } from "./game";
+import game, { GameStateChangeCallback, SendPlayerData } from "./game";
 
 const startSocketServer = () => {
     const port = 5000;
@@ -10,7 +10,8 @@ const startSocketServer = () => {
 
     socketWebServer.on('connection', function connection(ws) {
         let socket_player_id = "";
-        console.log("WEB Client connected")
+        console.log("WEB Client connected");
+
         ws.send("web connection established");
     
         ws.on('message', function message(data) {
@@ -32,8 +33,8 @@ const startSocketServer = () => {
             }
             if (dataObj['event'] === 'player_update_position') {
                 game.updatePlayerPosition(dataObj['player_id'], { 
-                    position_x: dataObj['position_x'], 
-                    position_y: dataObj['position_y'],
+                    x: dataObj['position_x'], 
+                    y: dataObj['position_y'],
                 });
             }
 
