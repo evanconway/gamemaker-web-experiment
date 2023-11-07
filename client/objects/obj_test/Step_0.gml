@@ -15,7 +15,8 @@ if (keyboard_check_pressed(vk_enter)) {
 var vel_x = 0;
 var vel_y = 0;
 
-var vel = 5;
+var dt = delta_time / (1000000 / game_get_speed(gamespeed_fps));
+var vel = 5 * dt;
 
 if (keyboard_check(vk_left)) vel_x -= vel;
 if (keyboard_check(vk_right)) vel_x += vel;

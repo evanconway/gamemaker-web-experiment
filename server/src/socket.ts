@@ -17,7 +17,7 @@ const startSocketServer = () => {
             const rawString = data.toString();
             const dataString = rawString.slice(0, rawString.length - 1);
             const dataObj = JSON.parse(dataString);
-            console.log(`web socket received:`, dataObj);
+            //console.log(`web socket received:`, dataObj);
 
             const sendStateToPlayer: GameStateChangeCallback = state => ws.send(
                 JSON.stringify({

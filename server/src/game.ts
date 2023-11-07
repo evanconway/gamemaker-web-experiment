@@ -43,10 +43,12 @@ class Game {
     }
 
     handleStateChanged() {
+        /*
         const bar = '---------------';
         console.log(bar, 'NEW GAME STATE', bar);
         console.log(JSON.stringify({ state: this.state, callbackPairs: this.onChangeCallbacks }));
         console.log(bar, '--------------', bar, '\n');
+        */
         this.onChangeCallbacks.forEach(cb => cb.callback(this.state));
     }
 

@@ -13,3 +13,13 @@ function struct_to_buffer(struct) {
 	buffer_write(buffer, buffer_string, data);
 	return buffer;
 }
+
+global.debug = false;
+
+/**
+ * @param {any} msg
+ */
+function debug_log(msg) {
+	if (!global.debug) return;
+	show_debug_message(msg);
+}

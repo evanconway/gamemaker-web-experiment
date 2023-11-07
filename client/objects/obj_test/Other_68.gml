@@ -1,23 +1,23 @@
-show_debug_message("async network event occured");
+debug_log("async network event occured");
 var keys = ds_map_keys_to_array(async_load);
 
 var type = ds_map_find_value(async_load, "type");
 
 // help identify type
-if (type == network_type_connect) show_debug_message("network_type_connect");
-if (type == network_type_data) show_debug_message("network_type_data");
-if (type == network_type_disconnect) show_debug_message("network_type_disconnect");
-if (type == network_type_down) show_debug_message("network_type_down");
-if (type == network_type_non_blocking_connect) show_debug_message("network_type_non_blocking_connect");
-if (type == network_type_up) show_debug_message("network_type_up");
-if (type == network_type_up_failed) show_debug_message("network_type_up_failed");
+if (type == network_type_connect) debug_log("network_type_connect");
+if (type == network_type_data) debug_log("network_type_data");
+if (type == network_type_disconnect) debug_log("network_type_disconnect");
+if (type == network_type_down) debug_log("network_type_down");
+if (type == network_type_non_blocking_connect) debug_log("network_type_non_blocking_connect");
+if (type == network_type_up) debug_log("network_type_up");
+if (type == network_type_up_failed) debug_log("network_type_up_failed");
 
 for (var i = 0; i < array_length(keys); i++) {
-	show_debug_message(keys[i] + ": " + string(ds_map_find_value(async_load, keys[i])));
+	debug_log(keys[i] + ": " + string(ds_map_find_value(async_load, keys[i])));
 }
 
 if (type == network_type_non_blocking_connect) {
-	show_debug_message($"Socket connection established!");
+	debug_log($"Socket connection established!");
 	
 	// send player id once connection is established
 	if (my_player_id != "") {
@@ -33,7 +33,7 @@ if (type == network_type_non_blocking_connect) {
 if (type == network_type_data) {
 	var buffer = ds_map_find_value(async_load, "buffer");
 	var json_string = buffer_read(buffer, buffer_string);
-	show_debug_message($"Data received: {json_string}");
+	debug_log($"Data received: {json_string}");
 	var data = {};
 	try {
 		data = json_parse(json_string);
@@ -41,8 +41,8 @@ if (type == network_type_data) {
 	var event = is_struct(data) && variable_struct_exists(data, "event") ? variable_struct_get(data, "event") : "";
 	if (event == "game_state") {
 		state =  variable_struct_get(data, "game_state");
-		show_debug_message(state);
+		debug_log(state);
 	}
 }
 
-show_debug_message("end async network event\n");
+debug_log("end async network event\n");
