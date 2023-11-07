@@ -93,3 +93,6 @@ But how would the server manage state for players in a game? We obviously don't 
 These are the questions we need to think through tomorrow.
 
 Ooh, one more thought. I wonder if we could turn this into a type racer clone instead??
+
+
+This is the end of planning on this branch. We'll leave this as the boxes demo if we need example screen shots in the future.

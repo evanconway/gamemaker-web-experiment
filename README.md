@@ -1,2 +1,3 @@
 # gamemaker-web-experiment
-Exploring web connection options in gamemaker.
+
+This branch will be left as the boxes demo, for reference later.
