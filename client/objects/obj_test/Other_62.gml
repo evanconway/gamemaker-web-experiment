@@ -13,7 +13,7 @@ if (event_id = request_player_id_http_req_id) {
 	show_debug_message($"client received player id: {my_player_id}");
 	show_debug_message("starting socket connection...");
 	socket = network_create_socket(network_socket_ws);
-	network_connect_raw_async(socket, "localhost", 5000);
+	network_connect_raw_async(socket, global.domain, 5000);
 }
 
 show_debug_message("end http event\n");

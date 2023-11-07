@@ -7,7 +7,7 @@ if (keyboard_check_pressed(vk_space)) {
 if (keyboard_check_pressed(vk_enter)) {
     var data = json_stringify({ test_http: "fake http data" });
     var map = ds_map_create();
-    var request_id = http_request("http://localhost:8000", "POST", map, data);
+    var request_id = http_request("http://" + global.domain + ":8000", "POST", map, data);
     ds_map_destroy(map);
 }
 
