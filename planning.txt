@@ -72,3 +72,24 @@ Is there no way to gracefully close a socket connection in gamemaker??
 We just added player movement, which correctly updates the state of all other connected clients. Let's take a break then assess what to do next.
 
 Ah crap. I think we never needed to make two socket servers. It looks like the windows client can totally connect to a web socket server.
+
+
+7th of November, 2023
+
+I had an idea for a treasure hunt game. The entire game could be 1 room with dozens of interacteable objects. Opening the application puts you into a queue for games. Once enough people are ready the server will start a "game" where a certain number of interacteable objects will be randomly chosen to contain treasure. Once a player has interacted with all 5 reasure containing interacts, they win!
+
+I think this is a good idea because it doesn't require any state interact between the players, and it won't be too hard to let the server decide which interacts contain data. In fact we could just give the interacts  string names, and the server could randomly choose which names are the interacts. That works well because the clients to tell the server a player is checking an interact, and then respond with yes/no for that interact. So the clients will never know which interacts are treasures until they find one.
+
+I also like this idea because it'll force us to think through the concept of organizing a "game". The client will have to understand the different states of queueing for a game and being in a game. And the server will have to juggle players getting ready for the game. I think this is an interesting puzzle to solve, and worth our time.
+
+To get started, let's pretend the game is simpler. We'll randomly spawn a box somewhere in the gameworld, and the first player to touch it wins. We'll do 2 players games to start since that'll be easier for testing.
+
+I suppose when a player loads the app, they'll immediately join the queue. Perhaps we could add a queue value to the player state. Additionally we could add a "game_id" value to the player state to indicate what game they're in once a game has started.
+
+I suppose the server, when players are added from the starting the app, could immediately assign them queue values. And the server at certain points will assess how many players are in the queue, and if there are enough to start a game, start a game. That would involve generating a game_id and assigning it to those players.
+
+But how would the server manage state for players in a game? We obviously don't need to update the position of players that are in a queue. And of course players in different game_ids don't need to know about players in other games.
+
+These are the questions we need to think through tomorrow.
+
+Ooh, one more thought. I wonder if we could turn this into a type racer clone instead??
