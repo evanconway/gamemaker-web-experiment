@@ -117,3 +117,5 @@ Ok I've got it. Add game_id and queue fields to the players. Add functionality t
 Ah, important book keeping note. Let's not call it game_id. Let's call it match_id. And let's start calling them "matches". Although the word "game" is totally appropriate, we've already named a lot of our infrastructure "game". And I think the term "match" much more immediately and accurately describes exactly what it is.
 
 I'm looking over how we send data to the players. Originally I had this weird callback system because we had different socket connections. But now I think we could simply associate a connection with a player. However, it's clear to me that we want to tailor the exact state sent to players based on current game state. Perhaps we'll still associate a socket connection with a player, but we'll create a function specifically for sending state using that socket instead of ever really referencing it in the game logic.
+
+As I'm writing more of the code for this, I'm tempted to say we should just remove the http server. There's no real reason for it, and I think it's over-complicating the socket stuff.

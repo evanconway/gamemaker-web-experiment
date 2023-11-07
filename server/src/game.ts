@@ -32,6 +32,8 @@ interface GameState {
 
 type SendEvent = 'connection_established' | 'update_game_state';
 
+export type ReceivedEvent = 'connect_player_id' | 'update_position';
+
 export type SendPlayerData = (event: SendEvent, data: any) => void;
 
 export type GameStateChangeCallback = (newState: GameState) => void;
@@ -75,12 +77,26 @@ class Game {
         const sendState: SendPlayerData = (event: SendEvent, data: any) => {
             ws.send(JSON.stringify({
                 event,
-                data
+                data,
             }));
         };
         this.playerSendStatePairings[playerId] = sendState;
         // send player event indicating they've connected
         sendState('connection_established', 'WS Connection Established');
+    }
+
+    /**
+     * Given data received from a web socket connection, perform game logic
+     */
+    handleMessageReceived(event: ReceivedEvent, data: any) {
+        // handling events should send state updates to other players.
+
+        if (event === 'update_position') {
+            game.updatePlayerPosition(data['player_id'], { 
+                x: data['position_x'], 
+                y: data['position_y'],
+            });
+        }
     }
 
     updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
