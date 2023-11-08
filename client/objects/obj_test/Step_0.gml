@@ -11,6 +11,17 @@ if (keyboard_check_pressed(vk_enter)) {
     ds_map_destroy(map);
 }
 
+var players = variable_struct_exists(state, "players") ? variable_struct_get(state, "players") : {};
+var player = variable_struct_exists(players, my_player_id) ? variable_struct_get(players, my_player_id) : undefined;
+
+if (player == undefined) {
+	// do nothing
+	// should be removed later, this is mostly for debug
+	exit
+}
+
+
+
 // handle movement
 var vel_x = 0;
 var vel_y = 0;
@@ -27,8 +38,8 @@ var players = variable_struct_exists(state, "players") ? variable_struct_get(sta
 var player = variable_struct_exists(players, my_player_id) ? variable_struct_get(players, my_player_id) : undefined;
 
 if (player != undefined && (vel_x != 0 || vel_y != 0)) {
-	var position_x = player.position.position_x + vel_x;
-	var position_y = player.position.position_y + vel_y;
+	var position_x = player.position.x + vel_x;
+	var position_y = player.position.y + vel_y;
 	var buffer = struct_to_buffer({
 		event: "player_update_position",
 		player_id: my_player_id,
