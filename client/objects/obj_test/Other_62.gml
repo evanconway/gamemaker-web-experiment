@@ -5,10 +5,10 @@ for (var i = 0; i < array_length(keys); i++) {
 	debug_log(keys[i] + ": " + string(ds_map_find_value(async_load, keys[i])));
 }
 
-var event_id = ds_map_find_value(async_load, "id");
+var request_id = ds_map_find_value(async_load, "id");
 var result = json_parse(ds_map_find_value(async_load, "result"));
 
-if (event_id = request_player_id_http_req_id) {
+if (request_id = request_player_id_http_req_id) {
 	my_player_id = variable_struct_get(result, "player_id");
 	debug_log($"client received player id: {my_player_id}");
 	debug_log("starting socket connection...");

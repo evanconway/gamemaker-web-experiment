@@ -39,8 +39,8 @@ if (type == network_type_data) {
 		data = json_parse(json_string);
 	} catch(err) {}
 	var event = is_struct(data) && variable_struct_exists(data, "event") ? variable_struct_get(data, "event") : "";
-	if (event == "game_state") {
-		state =  variable_struct_get(data, "game_state");
+	if (event == "update_game_state") {
+		state =  variable_struct_get(data, "data");
 		debug_log(state);
 	}
 }

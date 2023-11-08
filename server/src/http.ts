@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
         body += chunk;
 	});
 
-	const resObj: Record<string, string | number> = {};
+	const resObj: Record<string, string> = {};
 
 	if (req.url === '/start') {
 		const playerId = game.addPlayer();

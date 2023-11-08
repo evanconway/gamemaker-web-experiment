@@ -10,10 +10,10 @@ const startSocketServer = () => {
 
     socketWebServer.on('connection', function connection(ws) {
         let socket_player_id = "";
-        console.log("WEB Client connected");
-
+        
         ws.on('message', function message(data) {
             const rawString = data.toString();
+            // game maker needs to create buffers 1 byte longer than the content
             const dataString = rawString.slice(0, rawString.length - 1);
             const dataObj = JSON.parse(dataString);
             const event = dataObj['event'] as ReceivedEvent;

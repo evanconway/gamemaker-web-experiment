@@ -64,6 +64,7 @@ class Game {
                 blue: Math.floor(Math.random() * 256),
             },
         };
+        console.log(`player ${newPlayerId} added`)
         return newPlayerId;
     }
 
@@ -83,6 +84,8 @@ class Game {
         this.playerSendStatePairings[playerId] = sendState;
         // send player event indicating they've connected
         sendState('connection_established', 'WS Connection Established');
+        console.log(`player ${playerId} web socket connection established`);
+        sendState('update_game_state', this.state);
     }
 
     /**
