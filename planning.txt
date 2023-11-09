@@ -138,3 +138,11 @@ I think we'll send a match start time to the clients. And the clients will manua
 We also need to let players leave the match separately. One person may want to immediately re-queue, but the other may want to just sit in the results screen. I think someday we should let players go straight from game to re-queue, but for now let's just have them go back to title screen on exit results.
 
 We've hit a possibly major issue. GameMaker may not have a way to get the current time in micro seconds the same way Javascript does. Without this we won't have a way to synch time of our clients with server.
+
+(later that day)
+
+Yup, from what I see there isn't an easy way to get the exact time in GameMaker. I was thinking it'd be cool if the server gave a match start time to both clients, and they could use that value to count down 3 seconds or so to start the match. But without that solid anchor this seems like a wild goose chase.
+
+Let's just have the clients manually count down to game start themselves once their state changes. This ultimately means one of the clients has an unfair advantage because they'll get the state update sooner, but whatever. It won't be by too much time, and this is my first networking project, we'll allow mistakes.
+
+

@@ -30,7 +30,6 @@ interface Match {
     id: string,
     state: 'play' | 'results',
     victor?: Player,
-    startTime: number,
     players: Array<Player>,
 }
 
@@ -119,7 +118,6 @@ class Game {
             this.matches[matchId] = {
                 id: matchId,
                 state: 'play',
-                startTime: Date.now(),
                 players: newMatchPlayersArray,
             };
         }

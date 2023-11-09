@@ -31,8 +31,8 @@ if (type == network_type_data) {
 	debug_log($"Data received: {json_string}");
 	try {
 		var temp_data = json_parse(json_string);
-		application_state = temp_data[$ "clientState"];
 		game_data = temp_data[$ "data"];
+		application_state = temp_data[$ "clientState"];
 	} catch(err) {}
 	debug_log($"application_state: {application_state}");
 	debug_log(game_data);
