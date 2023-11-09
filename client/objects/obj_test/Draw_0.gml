@@ -1,11 +1,14 @@
-var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
+var match_state = game_data[$ "state"];
 
-for (var i = 0; i < array_length(players); i++) {
-	var player = players[i];
-	var player_color = make_color_rgb(player.color.red, player.color.green, player.color.blue);
-	var position_x = player.position.x;
-	var position_y = player.position.y;
-	draw_set_color(player_color);
-	draw_set_alpha(1);
-	draw_rectangle(position_x, position_y, position_x + 16, position_y + 16, false);
+if (application_state == "ingame" && match_state == "play") {
+	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
+	for (var i = 0; i < array_length(players); i++) {
+		var player = players[i];
+		var player_color = make_color_rgb(player.color.red, player.color.green, player.color.blue);
+		var position_x = player.position.x;
+		var position_y = player.position.y;
+		draw_set_color(player_color);
+		draw_set_alpha(1);
+		draw_rectangle(position_x, position_y, position_x + 16, position_y + 16, false);
+	}
 }

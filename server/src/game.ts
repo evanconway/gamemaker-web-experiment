@@ -4,7 +4,7 @@ import { WebSocket } from "ws";
 const WORLD_WIDTH = 320;
 const WORLD_HEIGHT = 180;
 const PLAYER_WIDTH = 16;
-const PLAYERS_PER_GAME = 2;
+const PLAYERS_PER_GAME = 1;
 
 type ClientState = 'title' | 'queued' | 'ingame';
 
@@ -28,12 +28,15 @@ interface Player {
 
 interface Match {
     id: string,
+    state: 'play' | 'results',
+    victor?: Player,
+    startTime: number,
     players: Array<Player>,
 }
 
 export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_match';
 
-type MatchEvent = 'blank' | 'update_position' | 'win';
+type MatchEvent = 'update' | 'win' | 'quit';
 
 class Game {
     players: Record<string, Player>;
@@ -60,7 +63,7 @@ class Game {
                 blue: Math.floor(Math.random() * 256),
             },
         };
-        console.log(`player ${newPlayerId} added`)
+        console.log(`added player id: ${newPlayerId}`);
         return newPlayerId;
     }
 
@@ -100,9 +103,6 @@ class Game {
         this.sendClientData(player, 'ingame', match);
     }
 
-    /**
-     * Using the current queue, assign match ids (start matches) if there are enough players.
-     */
     startMatches() {
         // players in game should get sent ingame state
         // all other players in queue should receive queued state
@@ -118,8 +118,10 @@ class Game {
             }
             this.matches[matchId] = {
                 id: matchId,
+                state: 'play',
+                startTime: Date.now(),
                 players: newMatchPlayersArray,
-            }
+            };
         }
         this.queue.forEach(player => {
             console.log(`player id: ${player.id} queued`);
@@ -136,21 +138,32 @@ class Game {
         const match = this.getPlayerMatch(player);
         if (match === undefined) return;
         const matchEvent = data['match_event'] as MatchEvent;
-        if (matchEvent === 'blank') {
-            console.log(`blank match update event sent by player id: ${player.id}`);
-        } else if (matchEvent === 'update_position') {
-            player.position = { 
-                x: data['position_x'], 
-                y: data['position_y'],
-            };
-        } else if (matchEvent === 'win') {
-            match.players.forEach(p => this.sendClientData(p, 'title', {}));
-            match.players = []; // prevent sending match data
-            const filteredMatches: typeof this.matches = {};
-            for (const id in this.matches) {
-                if (id !== match.id) filteredMatches[id] = this.matches[id];
+        if (match.state === 'play') {
+            if (matchEvent === 'update') {
+                const newX = data['position_x'];
+                const newY = data['position_y'];
+                player.position = { 
+                    x: newX === undefined ? player.position.x : newX, 
+                    y: newY === undefined ? player.position.y : newY, 
+                };
             }
-            this.matches = filteredMatches;
+            if (data['win']) {
+                console.log(`player won, id: ${player.id}`);
+                match.victor = player;
+                match.state = 'results';
+            }
+        } else if (match.state === 'results') {
+            if (matchEvent === 'quit') {
+                match.players = match.players.filter(p => p !== player);
+                if (match.players.length <= 0) {
+                    const filteredMatches: typeof this.matches = {};
+                    for (const id in this.matches) {
+                        if (id !== match.id) filteredMatches[id] = this.matches[id];
+                    }
+                    this.matches = filteredMatches;
+                }
+                this.sendClientData(player, 'title', {});
+            }
         }
         match.players.forEach(p => this.sendClientMatchData(p));
     }

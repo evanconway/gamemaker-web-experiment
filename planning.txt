@@ -127,3 +127,14 @@ Still just trying to code the state plan I outlined above. I hurt my back which 
 I just realized letting the player keep track of its own place in queue, and what match it's in, is stupid. let's create an actual queue array that we'll add players to.
 
 I think we should also get rid of the concept of events from the client side. The server basically dictates the entire player state.
+
+
+9th of November, 2023
+
+We were able to add a match queue, and matches. But I don't like that there isn't a ready screen, or a results screen. I think once the system finds a game it should display a sort of game found screen. Perhaps we won't let the player manually click any "ready" button or whatever, and just force into the game. But we definitely need a results screen so the player can understand who won, and decide what game state they want to go to next. 
+
+I think we'll send a match start time to the clients. And the clients will manually do a sort of count down based on that given start time. But actually playing the match and the count down won't be actual separate state values.
+
+We also need to let players leave the match separately. One person may want to immediately re-queue, but the other may want to just sit in the results screen. I think someday we should let players go straight from game to re-queue, but for now let's just have them go back to title screen on exit results.
+
+We've hit a possibly major issue. GameMaker may not have a way to get the current time in micro seconds the same way Javascript does. Without this we won't have a way to synch time of our clients with server.
