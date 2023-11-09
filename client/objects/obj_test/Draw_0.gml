@@ -1,10 +1,7 @@
-exit;
-var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : {};
+var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
 
-var player_ids = variable_struct_get_names(players);
-
-for (var i = 0; i < array_length(player_ids); i++) {
-	var player = variable_struct_get(players, player_ids[i]);
+for (var i = 0; i < array_length(players); i++) {
+	var player = players[i];
 	var player_color = make_color_rgb(player.color.red, player.color.green, player.color.blue);
 	var position_x = player.position.x;
 	var position_y = player.position.y;

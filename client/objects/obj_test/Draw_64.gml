@@ -1,6 +1,3 @@
-var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : {};
-var player = variable_struct_exists(players, my_player_id) ? variable_struct_get(players, my_player_id) : undefined;
-
 draw_set_color(c_white);
 draw_set_alpha(1);
 

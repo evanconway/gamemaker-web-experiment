@@ -4,7 +4,7 @@ import { WebSocket } from "ws";
 const WORLD_WIDTH = 320;
 const WORLD_HEIGHT = 180;
 const PLAYER_WIDTH = 16;
-const PLAYERS_PER_GAME = 2;
+const PLAYERS_PER_GAME = 1;
 
 type ClientState = 'title' | 'queued' | 'ingame';
 
@@ -26,12 +26,19 @@ interface Player {
     sendState?: SendPlayerData,
 }
 
-export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_position';
+interface Match {
+    id: string,
+    players: Array<Player>,
+}
+
+export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_match';
+
+type MatchEvent = 'blank' | 'update_position' | 'win';
 
 class Game {
     players: Record<string, Player>;
     queue: Array<Player>;
-    matches: Record<string, Array<Player>>;
+    matches: Record<string, Match>;
 
     constructor() {
         this.players = {};
@@ -39,7 +46,7 @@ class Game {
         this.matches = {};
     }
 
-    addPlayer() {
+    addPlayer(): string {
         const newPlayerId = uuid();
         this.players[newPlayerId] = {
             id: newPlayerId,
@@ -57,42 +64,6 @@ class Game {
         return newPlayerId;
     }
 
-    sendClientData(playerId: string, clientState: ClientState, data: any) {
-        const sendData = this.players[playerId].sendState;
-        if (sendData === undefined) return;
-        sendData(clientState, data);
-    }
-
-    /**
-     * Using the current queue, assign match ids (start matches) if there are enough players.
-     */
-    startMatches() {
-        // players in game should get sent ingame state
-        // all other players in queue should receive queued state
-        while (this.queue.length >= PLAYERS_PER_GAME) {
-            const newMatchPlayersArray: Array<Player> = [];
-            const matchId = uuid();
-            for (let i = 0; i < PLAYERS_PER_GAME; i++) {
-                const newPlayer = this.queue.shift();
-                if (newPlayer !== undefined) newMatchPlayersArray.push();
-                const playerId = newPlayer === undefined ? '' : newPlayer.id;
-                this.sendClientData(playerId, 'ingame', {});
-                console.log(`player id: ${playerId} entered match id: ${matchId}`);
-            }
-            this.matches[matchId] = newMatchPlayersArray;
-        }
-        this.queue.forEach(player => {
-            console.log(`player id: ${player.id} queued`);
-            this.sendClientData(player.id, 'queued', {});
-        });
-    }
-
-    /**
-     * Connects given player with a web socket connection so they can be send state updates.
-     * 
-     * @param playerId 
-     * @param ws 
-     */
     connectPlayerToSocketConnection(playerId: string, ws: WebSocket) {
         const player = this.players[playerId];
         if (player === undefined) {
@@ -108,9 +79,82 @@ class Game {
         sendState('title', {});
     }
 
+    getPlayerMatch(player: Player) {
+        for (const key in this.matches) {
+            const match = this.matches[key];
+            if (match.players.includes(player)) return match;
+        }
+        return undefined;
+    }
+
+    sendClientData(player: Player, clientState: ClientState, data: any) {
+        const sendData = player.sendState;
+        if (sendData === undefined) return;
+        sendData(clientState, data);
+    }
+
+    sendClientMatchData(player: Player) {
+        const match = this.getPlayerMatch(player);
+        if (match === undefined) return;
+        console.log(`sending player id: ${player.id} data for match id ${match.id}`);
+        this.sendClientData(player, 'ingame', match);
+    }
+
     /**
-     * Given data received from a web socket connection, perform game logic
+     * Using the current queue, assign match ids (start matches) if there are enough players.
      */
+    startMatches() {
+        // players in game should get sent ingame state
+        // all other players in queue should receive queued state
+        while (this.queue.length >= PLAYERS_PER_GAME) {
+            const newMatchPlayersArray: Array<Player> = [];
+            const matchId = uuid();
+            for (let i = 0; i < PLAYERS_PER_GAME; i++) {
+                const newPlayer = this.queue.shift();
+                if (newPlayer !== undefined) {
+                    newMatchPlayersArray.push(newPlayer);
+                    console.log(`player id: ${newPlayer?.id} entered match id: ${matchId}`);
+                }
+            }
+            this.matches[matchId] = {
+                id: matchId,
+                players: newMatchPlayersArray,
+            }
+        }
+        this.queue.forEach(player => {
+            console.log(`player id: ${player.id} queued`);
+            this.sendClientData(player, 'queued', {});
+        });
+        for (const key in this.matches) {
+            const match = this.matches[key];
+            console.log(`sending match data for match id: ${match.id}`);
+            match.players.forEach(p => this.sendClientMatchData(p));
+        }
+    }
+
+    updateMatch(player: Player, data: any) {
+        const match = this.getPlayerMatch(player);
+        if (match === undefined) return;
+        const matchEvent = data['match_event'] as MatchEvent;
+        if (matchEvent === 'blank') {
+            console.log(`blank match update event sent by player id: ${player.id}`);
+        } else if (matchEvent === 'update_position') {
+            player.position = { 
+                x: data['position_x'], 
+                y: data['position_y'],
+            };
+        } else if (matchEvent === 'win') {
+            match.players.forEach(p => this.sendClientData(p, 'title', {}));
+            match.players = []; // prevent sending match data
+            const filteredMatches: typeof this.matches = {};
+            for (const id in this.matches) {
+                if (id !== match.id) filteredMatches[id] = this.matches[id];
+            }
+            this.matches = filteredMatches;
+        }
+        match.players.forEach(p => this.sendClientMatchData(p));
+    }
+
     handleMessageReceived(event: ReceivedEvent, data: any) {
         const playerId = data['player_id'];
         if (playerId === undefined) return;
@@ -121,17 +165,9 @@ class Game {
         if (event === 'player_add_to_queue') {
             this.queue.push(player);
             this.startMatches();
-        } else if (event === 'update_position') {
-            this.updatePlayerPosition(playerId, { 
-                x: data['position_x'], 
-                y: data['position_y'],
-            });
+        } else if (event === 'update_match') {
+            this.updateMatch(player, data);
         }
-    }
-
-    updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
-        if (this.players[playerId] === undefined) return;
-        this.players[playerId].position = newPosition;
     }
 
     deletePlayer(playerId: string) {
