@@ -20,7 +20,15 @@ if (player == undefined) {
 	exit
 }
 
-
+if (player.queue < 0 && keyboard_check_pressed(vk_anykey)) {
+	var buffer = struct_to_buffer({
+		event: "player_add_to_queue",
+		player_id: my_player_id,
+	});
+	network_send_raw(socket, buffer, buffer_get_size(buffer));
+	buffer_delete(buffer);
+	exit;
+}
 
 // handle movement
 var vel_x = 0;
@@ -33,9 +41,6 @@ if (keyboard_check(vk_left)) vel_x -= vel;
 if (keyboard_check(vk_right)) vel_x += vel;
 if (keyboard_check(vk_up)) vel_y -= vel;
 if (keyboard_check(vk_down)) vel_y += vel;
-
-var players = variable_struct_exists(state, "players") ? variable_struct_get(state, "players") : {};
-var player = variable_struct_exists(players, my_player_id) ? variable_struct_get(players, my_player_id) : undefined;
 
 if (player != undefined && (vel_x != 0 || vel_y != 0)) {
 	var position_x = player.position.x + vel_x;

@@ -119,3 +119,11 @@ Ah, important book keeping note. Let's not call it game_id. Let's call it match_
 I'm looking over how we send data to the players. Originally I had this weird callback system because we had different socket connections. But now I think we could simply associate a connection with a player. However, it's clear to me that we want to tailor the exact state sent to players based on current game state. Perhaps we'll still associate a socket connection with a player, but we'll create a function specifically for sending state using that socket instead of ever really referencing it in the game logic.
 
 As I'm writing more of the code for this, I'm tempted to say we should just remove the http server. There's no real reason for it, and I think it's over-complicating the socket stuff.
+
+8th of November, 2023
+
+Still just trying to code the state plan I outlined above. I hurt my back which has also hurt my focus, so my pace hasn't been great. There's not a huge rush though. We'll just do what we can.
+
+I just realized letting the player keep track of its own place in queue, and what match it's in, is stupid. let's create an actual queue array that we'll add players to.
+
+I think we should also get rid of the concept of events from the client side. The server basically dictates the entire player state.

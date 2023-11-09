@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import game, { GameStateChangeCallback, ReceivedEvent, SendPlayerData } from "./game";
+import game, { ReceivedEvent } from "./game";
 
 const startSocketServer = () => {
     const port = 5000;

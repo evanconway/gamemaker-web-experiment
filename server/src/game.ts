@@ -4,56 +4,45 @@ import { WebSocket } from "ws";
 const WORLD_WIDTH = 320;
 const WORLD_HEIGHT = 180;
 const PLAYER_WIDTH = 16;
+const PLAYERS_PER_GAME = 2;
+
+type ClientState = 'title' | 'queued' | 'ingame';
+
+type SendPlayerData = (clientState: ClientState, data: any) => void;
 
 interface PlayerPosition {
     x: number,
     y: number,
 }
 
-// this data gets sent to GameMaker, which favors snake case
 interface Player {
     id: string,
-    queue: number,
-    matchId: string,
     position: PlayerPosition,
     color: {
         red: number,
         green: number,
         blue: number,
     },
+    sendState?: SendPlayerData,
 }
 
-type Players = Record<string, Player>;
-
-interface GameState {
-    players: Players,
-    matches: Record<string, Set<string>>,
-};
-
-type SendEvent = 'connection_established' | 'update_game_state';
-
-export type ReceivedEvent = 'connect_player_id' | 'update_position';
-
-export type SendPlayerData = (event: SendEvent, data: any) => void;
-
-export type GameStateChangeCallback = (newState: GameState) => void;
+export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_position';
 
 class Game {
-    state: GameState;
-    // mapping of player IDs to functions which send data to player
-    playerSendStatePairings: Record<string, SendPlayerData>;
+    players: Record<string, Player>;
+    queue: Array<Player>;
+    matches: Record<string, Array<Player>>;
 
     constructor() {
-        this.state = { players: {}, matches: {} };
-        this.playerSendStatePairings = {};
+        this.players = {};
+        this.queue = [];
+        this.matches = {};
     }
 
     addPlayer() {
         const newPlayerId = uuid();
-        this.state.players[newPlayerId] = {
+        this.players[newPlayerId] = {
             id: newPlayerId,
-            queue: -1,
-            matchId: "",
             position: {
                 x: Math.floor(Math.random() * (WORLD_WIDTH - PLAYER_WIDTH)),
                 y: Math.floor(Math.random() * (WORLD_HEIGHT - PLAYER_WIDTH)),
@@ -68,6 +57,26 @@ class Game {
         return newPlayerId;
     }
 
+    sendClientData(playerId: string, clientState: ClientState, data: any) {
+        const sendData = this.players[playerId].sendState;
+        if (sendData === undefined) return;
+        sendData(clientState, data);
+    }
+
+    /**
+     * Using the current queue, assign match ids (start matches) if there are enough players.
+     */
+    startMatches() {
+        while (this.queue.length >= PLAYERS_PER_GAME) {
+            const newMatchPlayersArray: Array<Player> = [];
+            for (let i = 0; i < PLAYERS_PER_GAME; i++) {
+                const newPlayer = this.queue.shift();
+                if (newPlayer !== undefined) newMatchPlayersArray.push();
+            }
+            this.matches[uuid()] = newMatchPlayersArray;
+        }
+    }
+
     /**
      * Connects given player with a web socket connection so they can be send state updates.
      * 
@@ -75,27 +84,30 @@ class Game {
      * @param ws 
      */
     connectPlayerToSocketConnection(playerId: string, ws: WebSocket) {
-        const sendState: SendPlayerData = (event: SendEvent, data: any) => {
-            ws.send(JSON.stringify({
-                event,
+        const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
+                clientState,
                 data,
-            }));
-        };
-        this.playerSendStatePairings[playerId] = sendState;
-        // send player event indicating they've connected
-        sendState('connection_established', 'WS Connection Established');
+        }));
+        this.players[playerId].sendState = sendState;
         console.log(`player ${playerId} web socket connection established`);
-        sendState('update_game_state', this.state);
+        sendState('title', {});
     }
 
     /**
      * Given data received from a web socket connection, perform game logic
      */
     handleMessageReceived(event: ReceivedEvent, data: any) {
-        // handling events should send state updates to other players.
+        const playerId = data['player_id'];
+        if (playerId === undefined) return;
+        const player = this.players[playerId];
+        if (player === undefined) return;
 
-        if (event === 'update_position') {
-            game.updatePlayerPosition(data['player_id'], { 
+        // handling events should send state updates to other players.
+        if (event === 'player_add_to_queue') {
+            this.queue.push(player);
+            this.startMatches();
+        } else if (event === 'update_position') {
+            this.updatePlayerPosition(playerId, { 
                 x: data['position_x'], 
                 y: data['position_y'],
             });
@@ -103,21 +115,16 @@ class Game {
     }
 
     updatePlayerPosition(playerId: string, newPosition: PlayerPosition) {
-        if (this.state.players[playerId] === undefined) return;
-        this.state.players[playerId].position = newPosition;
+        if (this.players[playerId] === undefined) return;
+        this.players[playerId].position = newPosition;
     }
 
     deletePlayer(playerId: string) {
-        const filteredPlayers: Players = {};
-        const filteredPlayerSendStatePairings: typeof this.playerSendStatePairings = {}
-        for (const key in this.state.players) {
-            if (key !== playerId) {
-                filteredPlayers[key] = this.state.players[key];
-                filteredPlayerSendStatePairings[key] = this.playerSendStatePairings[key];
-            }
+        const filteredPlayers: typeof this.players = {};
+        for (const key in this.players) {
+            if (key !== playerId) filteredPlayers[key] = this.players[key];
         }
-        this.state.players = filteredPlayers;
-        this.playerSendStatePairings = filteredPlayerSendStatePairings;
+        this.players = filteredPlayers;
     }
 }
 
