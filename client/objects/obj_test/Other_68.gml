@@ -21,12 +21,7 @@ if (type == network_type_non_blocking_connect) {
 	
 	// send player id once connection is established
 	if (my_player_id != "") {
-		var buffer = struct_to_buffer({
-			event: "connect_player_id",
-			player_id: my_player_id,
-		});
-		network_send_raw(socket, buffer, buffer_get_size(buffer));
-		buffer_delete(buffer);
+		send_server_data("connect_player_id", { "player_id": my_player_id });
 	}
 }
 
@@ -34,15 +29,13 @@ if (type == network_type_data) {
 	var buffer = ds_map_find_value(async_load, "buffer");
 	var json_string = buffer_read(buffer, buffer_string);
 	debug_log($"Data received: {json_string}");
-	var data = {};
 	try {
-		data = json_parse(json_string);
+		var temp_data = json_parse(json_string);
+		application_state = temp_data[$ "clientState"];
+		game_data = temp_data[$ "data"];
 	} catch(err) {}
-	var event = is_struct(data) && variable_struct_exists(data, "event") ? variable_struct_get(data, "event") : "";
-	if (event == "update_game_state") {
-		state =  variable_struct_get(data, "data");
-		debug_log(state);
-	}
+	debug_log($"application_state: {application_state}");
+	debug_log(game_data);
 }
 
 debug_log("end async network event\n");

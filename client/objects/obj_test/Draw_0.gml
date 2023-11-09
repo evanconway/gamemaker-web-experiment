@@ -1,5 +1,5 @@
 exit;
-var players = variable_struct_exists(state, "players") ? variable_struct_get(state, "players") : {};
+var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : {};
 
 var player_ids = variable_struct_get_names(players);
 

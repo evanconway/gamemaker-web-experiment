@@ -67,14 +67,24 @@ class Game {
      * Using the current queue, assign match ids (start matches) if there are enough players.
      */
     startMatches() {
+        // players in game should get sent ingame state
+        // all other players in queue should receive queued state
         while (this.queue.length >= PLAYERS_PER_GAME) {
             const newMatchPlayersArray: Array<Player> = [];
+            const matchId = uuid();
             for (let i = 0; i < PLAYERS_PER_GAME; i++) {
                 const newPlayer = this.queue.shift();
                 if (newPlayer !== undefined) newMatchPlayersArray.push();
+                const playerId = newPlayer === undefined ? '' : newPlayer.id;
+                this.sendClientData(playerId, 'ingame', {});
+                console.log(`player id: ${playerId} entered match id: ${matchId}`);
             }
-            this.matches[uuid()] = newMatchPlayersArray;
+            this.matches[matchId] = newMatchPlayersArray;
         }
+        this.queue.forEach(player => {
+            console.log(`player id: ${player.id} queued`);
+            this.sendClientData(player.id, 'queued', {});
+        });
     }
 
     /**
@@ -84,6 +94,11 @@ class Game {
      * @param ws 
      */
     connectPlayerToSocketConnection(playerId: string, ws: WebSocket) {
+        const player = this.players[playerId];
+        if (player === undefined) {
+            console.log(`playerId: ${playerId} does not exist`);
+            return;
+        }
         const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
                 clientState,
                 data,

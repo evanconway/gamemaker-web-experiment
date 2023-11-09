@@ -19,7 +19,8 @@ const startSocketServer = () => {
             const event = dataObj['event'] as ReceivedEvent;
 
             if (event === 'connect_player_id') {
-                socket_player_id = dataObj['player_id'];
+                console.log(`connecting player: ${dataString}`);
+                socket_player_id = dataObj['data']['player_id'];
                 game.connectPlayerToSocketConnection(socket_player_id, ws);
             } else {
                 game.handleMessageReceived(event, dataObj['data']);
