@@ -4,7 +4,7 @@ import { WebSocket } from "ws";
 const WORLD_WIDTH = 320;
 const WORLD_HEIGHT = 180;
 const PLAYER_WIDTH = 16;
-const PLAYERS_PER_GAME = 1;
+const PLAYERS_PER_GAME = 2;
 
 type ClientState = 'title' | 'queued' | 'ingame';
 
