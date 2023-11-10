@@ -4,7 +4,7 @@ import { WebSocket } from "ws";
 const WORLD_WIDTH = 320;
 const WORLD_HEIGHT = 180;
 const PLAYER_WIDTH = 16;
-const PLAYERS_PER_GAME = 1;
+const PLAYERS_PER_GAME = 2;
 
 type ClientState = 'title' | 'queued' | 'ingame';
 
@@ -35,7 +35,7 @@ interface Match {
 
 export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_match';
 
-type MatchEvent = 'update' | 'win' | 'quit';
+type MatchEvent = 'update' | 'quit' | 'player_dropped';
 
 class Game {
     players: Record<string, Player>;
@@ -132,11 +132,29 @@ class Game {
         }
     }
 
+    removePlayerFromMatch(player: Player) {
+        const match = this.getPlayerMatch(player);
+        if (match === undefined) return undefined;
+        match.players = match.players.filter(p => p !== player);
+        if (match.players.length <= 0) {
+            const filteredMatches: typeof this.matches = {};
+            for (const id in this.matches) {
+                if (id !== match.id) filteredMatches[id] = this.matches[id];
+            }
+            this.matches = filteredMatches;
+        }
+        this.sendClientData(player, 'title', {});
+        // consider also updating the match to check for win condition here
+        return match;
+    }
+
     updateMatch(player: Player, data: any) {
         const match = this.getPlayerMatch(player);
         if (match === undefined) return;
         const matchEvent = data['match_event'] as MatchEvent;
-        if (match.state === 'play') {
+        if (matchEvent === 'player_dropped') {
+            this.removePlayerFromMatch(player);
+        } else if (match.state === 'play') {
             if (matchEvent === 'update') {
                 const newX = data['position_x'];
                 const newY = data['position_y'];
@@ -152,15 +170,7 @@ class Game {
             }
         } else if (match.state === 'results') {
             if (matchEvent === 'quit') {
-                match.players = match.players.filter(p => p !== player);
-                if (match.players.length <= 0) {
-                    const filteredMatches: typeof this.matches = {};
-                    for (const id in this.matches) {
-                        if (id !== match.id) filteredMatches[id] = this.matches[id];
-                    }
-                    this.matches = filteredMatches;
-                }
-                this.sendClientData(player, 'title', {});
+                this.removePlayerFromMatch(player);
             }
         }
         match.players.forEach(p => this.sendClientMatchData(p));
@@ -182,6 +192,12 @@ class Game {
     }
 
     deletePlayer(playerId: string) {
+        const player = this.players[playerId];
+        if (player === undefined) return;
+
+        // remove player from active match, and update all other players in said match
+        this.updateMatch(player, { match_event: 'player_dropped' });
+
         const filteredPlayers: typeof this.players = {};
         for (const key in this.players) {
             if (key !== playerId) filteredPlayers[key] = this.players[key];

@@ -11,10 +11,7 @@ if (application_state == "title") {
 } else if (application_state == "ingame" && match_state == "play" && ready_time > 0) {
 	ready_time -= delta_time;
 } else if (application_state == "ingame" && match_state == "play" && ready_time <= 0) {
-	var to_send = {
-		player_id: my_player_id,
-		match_event: "",
-	}
+	var to_send = { player_id: my_player_id, match_event: "" };
 	
 	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
 	var my_index = array_find_index(players, function(p) {

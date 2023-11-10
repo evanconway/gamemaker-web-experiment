@@ -145,4 +145,4 @@ Yup, from what I see there isn't an easy way to get the exact time in GameMaker.
 
 Let's just have the clients manually count down to game start themselves once their state changes. This ultimately means one of the clients has an unfair advantage because they'll get the state update sooner, but whatever. It won't be by too much time, and this is my first networking project, we'll allow mistakes.
 
-
+Ah, what just became clear is we don't have a good way to handle players leaving in the middle of a game. We should change the match logic so when someone leaves it automatically assigns a win. Though let's not do that yet. For now we'll just let the match continue with a single player in it.
