@@ -162,3 +162,5 @@ Ooh, a couple other game feel ideas:
 I also still really like the idea of varying the pace at which words get sent out. But I'm not sure how to do this if we allow all players to finish on time. Perhaps we should ignore this feature for now and just get the system to account for points and declare a winner.
 
 We got the system to a point where you can "win". There's still a lot that's gross or crude, but this is a big mileston. Tomorrow we'll look at the mechanics again with a fresh mind, and better assess how to make it fun.
+
+We tried to deploy to gx games, but gx games explicitly forbids non https requests. Damn. Let's definitely shift over to strictly using TCP tomorrow. I'm sure we could figure out how to get a signed certificate but I can't be bothered. And the http server was never necessary anyway.
