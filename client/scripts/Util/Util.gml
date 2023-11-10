@@ -45,3 +45,21 @@ function get_text_pressed() {
 	}
 	return result;
 }
+
+
+/**
+ * Draw text centered on the screen. Should only be called
+ * in the draw gui event.
+ *
+ * @param {string} text the text to draw
+ * @param {real} v_offset the vertical offset of the text, default is 0
+ */
+function draw_text_centered(text, v_offset=0) {
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_middle);
+	draw_set_color(c_white);
+	draw_set_alpha(1);
+	var draw_x = display_get_gui_width() / 2;
+	var draw_y = display_get_gui_height() / 2;
+	draw_text(draw_x, draw_y + v_offset, text);
+}
