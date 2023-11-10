@@ -1499,7 +1499,6 @@ bridge
 recommend
 obvious
 basically
-e-mail
 generate
 anymore
 propose
@@ -1561,7 +1560,6 @@ extremely
 extent
 component
 mix
-long-term
 slow
 contrast
 zone
@@ -2100,7 +2098,6 @@ breakfast
 strongly
 engineering
 luck
-so-called
 constant
 clinic
 veteran
@@ -2578,7 +2575,6 @@ significance
 vessel
 storage
 flee
-mm-hmm
 leather
 distribute
 evolution
@@ -2907,7 +2903,6 @@ mouse
 rope
 concrete
 prescription
-African-American
 chase
 brick
 recruit
@@ -3062,7 +3057,6 @@ weakness
 pig
 classical
 estimated
-T-shirt
 unemployment
 civilization
 fold
@@ -3296,7 +3290,6 @@ fork
 disk
 relieve
 suspicion
-health-care
 residence
 shame
 meaningful
@@ -3436,7 +3429,6 @@ candle
 judicial
 entity
 suffering
-full-time
 lamp
 garbage
 servant
@@ -3703,7 +3695,6 @@ ministry
 verdict
 instruct
 skull
-self-esteem
 cooperative
 manipulate
 bee
@@ -3796,7 +3787,6 @@ interact
 soap
 cute
 rival
-short-term
 punch
 pin
 hockey
@@ -3845,7 +3835,6 @@ dough
 grandchild
 dam
 reportedly
-well-known
 surrounding
 ecological
 outfit
@@ -3975,7 +3964,6 @@ perceived
 sole
 publicity
 unfold
-well-being
 validity
 ecosystem
 strictly
@@ -3995,7 +3983,6 @@ artifact
 sneak
 monkey
 mentor
-two-thirds
 listener
 lightning
 legally
@@ -4004,7 +3991,6 @@ disappointment
 disturb
 rib
 excessive
-high-tech
 debris
 rod
 logical
@@ -4150,7 +4136,6 @@ globe
 fragile
 objection
 chemistry
-old-fashioned
 crowded
 blast
 prevail
@@ -4203,7 +4188,6 @@ youngster
 premium
 accountability
 overwhelm
-one-third
 contemplate
 update
 spark

@@ -149,4 +149,6 @@ Ah, what just became clear is we don't have a good way to handle players leaving
 
 We added that logic without too much trouble. Luckily ejecting players happens inside the match update code, so we can easily change what happens to a match when a player leaves now. We may finally be at a point where we can start writing the game itself. 
 
-I know I want to do some sort of typing race thing, but I'm very unsure what mechanics will feel fun. I had a vision of random words appearing at the top of the screen at random locations, and falling down. But perhaps that's too complicated and annoying? Let's instead let the match choose a word, which it will send to the players. 
+I know I want to do some sort of typing race thing, but I'm very unsure what mechanics will feel fun. I had a vision of random words appearing at the top of the screen at random locations, and falling down. But perhaps that's too complicated and annoying? Let's instead let the match choose a word, which it will send to the players. Who ever types that word first wins. First person to type 5 words first wins.
+
+This strategy of first to type the word might work. I think by pacing the words given, we could bring fun with the anticipation of typing the next word. Possibly even a sort of story feel if we could bring music into the equation. 

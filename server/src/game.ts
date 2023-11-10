@@ -26,6 +26,8 @@ type ClientState = 'title' | 'queued' | 'ingame';
 
 type SendPlayerData = (clientState: ClientState, data: any) => void;
 
+// note for future projects, the concept of a "client" and a "player" in a match should be separate
+// but this project it should be fine
 interface Player {
     id: string,
     typed: string, // typed characters by the player
@@ -40,7 +42,7 @@ interface Player {
 interface Match {
     id: string,
     state: 'play' | 'results',
-    word?: string, // the randomly chose word players must type
+    word: string, // the randomly chose word players must type
     victor?: Player,
     players: Array<Player>,
 }
@@ -111,13 +113,6 @@ class Game {
         this.sendClientData(player, 'ingame', match);
     }
 
-    getRandomWord() {
-        let result = "";
-        for (let i = 0; i < 7; i++) {
-
-        }
-    }
-
     startMatches() {
         // players in game should get sent ingame state
         // all other players in queue should receive queued state
@@ -175,8 +170,9 @@ class Game {
             if (matchEvent === 'update') {
                 const newTyped = data['typed'];
                 if (newTyped !== undefined) player.typed = newTyped;
-                if (player.typed !== undefined && player.typed === match.word) {
+                if (player.typed !== undefined && player.typed.toLowerCase() === match.word.toLowerCase()) {
                     match.word = getRandomWord();
+                    match.players.forEach(p => p.typed = '');
                 }
             }
             if (data['win']) {
