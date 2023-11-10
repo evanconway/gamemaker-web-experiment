@@ -19,7 +19,8 @@
   },
   "resources": [
     {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},},
-    {"id":{"name":"Network","path":"scripts/Network/Network.yy",},},
+    {"id":{"name":"fnt_game","path":"fonts/fnt_game/fnt_game.yy",},},
+    {"id":{"name":"Util","path":"scripts/Util/Util.yy",},},
     {"id":{"name":"obj_camera","path":"objects/obj_camera/obj_camera.yy",},},
     {"id":{"name":"rm_test","path":"rooms/rm_test/rm_test.yy",},},
   ],

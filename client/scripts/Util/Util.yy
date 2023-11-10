@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "Network",
+  "name": "Util",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

@@ -1,3 +1,5 @@
+draw_set_font(fnt_game);
+
 socket = -1;
 
 my_player_id = "";

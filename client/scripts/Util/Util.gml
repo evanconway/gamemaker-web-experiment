@@ -33,3 +33,15 @@ function debug_log(msg) {
 	if (!global.debug) return;
 	show_debug_message(msg);
 }
+
+function get_text_pressed() {
+	var result = "";
+	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	for (var i = 1; i <= string_length(alphabet); i++) {
+		var char = string_char_at(alphabet, i);
+		if (keyboard_check_pressed(ord(char))) {
+			result += char;
+		}
+	}
+	return result;
+}

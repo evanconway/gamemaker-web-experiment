@@ -1,7 +1,7 @@
 var match_state = game_data[$ "state"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
-	ready_time = 2000000;
+	ready_time = 3000000;
 }
 
 if (application_state == "title") {
@@ -42,9 +42,15 @@ if (application_state == "title") {
 		to_send[$ "position_y"] = position_y;
 	}
 	
-	if (keyboard_check_pressed(ord("W"))) {
+	
+	var text_typed = player.typed + get_text_pressed();
+	if (keyboard_check_pressed(vk_backspace)) {
+		text_typed = string_delete(text_typed, string_length(text_typed), 1);
+	}
+	
+	if (text_typed != player.typed) {
 		to_send[$ "match_event"] = "update";
-		to_send[$ "win"] = true;
+		to_send[$ "typed"] = text_typed;
 	}
 	
 	if (to_send[$ "match_event"] != "") send_server_data("update_match", to_send);

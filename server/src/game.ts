@@ -1,23 +1,34 @@
 import { v4 as uuid } from "uuid";
 import { WebSocket } from "ws";
+import fs from 'fs';
 
 const WORLD_WIDTH = 320;
 const WORLD_HEIGHT = 180;
 const PLAYER_WIDTH = 16;
 const PLAYERS_PER_GAME = 2;
 
+// very bad practice! fix later
+let WORDS: Array<string> = [];
+fs.readFile('./src/words.txt', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    WORDS = data.split('\r\n');
+    console.log(WORDS);
+});
+
+const getRandomWord = () => {
+    return WORDS[Math.floor(Math.random() * WORDS.length)];
+};
+
 type ClientState = 'title' | 'queued' | 'ingame';
 
 type SendPlayerData = (clientState: ClientState, data: any) => void;
 
-interface PlayerPosition {
-    x: number,
-    y: number,
-}
-
 interface Player {
     id: string,
-    position: PlayerPosition,
+    typed: string, // typed characters by the player
     color: {
         red: number,
         green: number,
@@ -29,6 +40,7 @@ interface Player {
 interface Match {
     id: string,
     state: 'play' | 'results',
+    word?: string, // the randomly chose word players must type
     victor?: Player,
     players: Array<Player>,
 }
@@ -52,10 +64,7 @@ class Game {
         const newPlayerId = uuid();
         this.players[newPlayerId] = {
             id: newPlayerId,
-            position: {
-                x: Math.floor(Math.random() * (WORLD_WIDTH - PLAYER_WIDTH)),
-                y: Math.floor(Math.random() * (WORLD_HEIGHT - PLAYER_WIDTH)),
-            },
+            typed: "",
             color: {
                 red: Math.floor(Math.random() * 256),
                 green: Math.floor(Math.random() * 256),
@@ -102,6 +111,13 @@ class Game {
         this.sendClientData(player, 'ingame', match);
     }
 
+    getRandomWord() {
+        let result = "";
+        for (let i = 0; i < 7; i++) {
+
+        }
+    }
+
     startMatches() {
         // players in game should get sent ingame state
         // all other players in queue should receive queued state
@@ -118,6 +134,7 @@ class Game {
             this.matches[matchId] = {
                 id: matchId,
                 state: 'play',
+                word: getRandomWord(),
                 players: newMatchPlayersArray,
             };
         }
@@ -156,12 +173,11 @@ class Game {
             this.removePlayerFromMatch(player);
         } else if (match.state === 'play') {
             if (matchEvent === 'update') {
-                const newX = data['position_x'];
-                const newY = data['position_y'];
-                player.position = { 
-                    x: newX === undefined ? player.position.x : newX, 
-                    y: newY === undefined ? player.position.y : newY, 
-                };
+                const newTyped = data['typed'];
+                if (newTyped !== undefined) player.typed = newTyped;
+                if (player.typed !== undefined && player.typed === match.word) {
+                    match.word = getRandomWord();
+                }
             }
             if (data['win']) {
                 console.log(`player won, id: ${player.id}`);

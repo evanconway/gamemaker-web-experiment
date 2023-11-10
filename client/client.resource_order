@@ -2,7 +2,8 @@
   "FolderOrderSettings": [],
   "ResourceOrderSettings": [
     {"name":"obj_test","order":2,"path":"objects/obj_test/obj_test.yy",},
-    {"name":"Network","order":3,"path":"scripts/Network/Network.yy",},
+    {"name":"fnt_game","order":5,"path":"fonts/fnt_game/fnt_game.yy",},
+    {"name":"Util","order":3,"path":"scripts/Util/Util.yy",},
     {"name":"obj_camera","order":4,"path":"objects/obj_camera/obj_camera.yy",},
     {"name":"rm_test","order":1,"path":"rooms/rm_test/rm_test.yy",},
   ],
