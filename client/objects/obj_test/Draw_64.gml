@@ -38,7 +38,8 @@ if (application_state == "connecting_to_server") {
 		draw_text(draw_x, draw_y, word);
 	}
 	if (match_state == "results") {
-		draw_text(0, 0, "Game complete. Q to return.");
+		draw_text(0, 0, "Game complete.");
+		draw_text(0, 12, $"Victor: {game_data.victor.id}");
 	}
 } else {
 	draw_text(0, 0, "game state not recognized");

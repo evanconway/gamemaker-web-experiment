@@ -41,6 +41,7 @@ interface Match {
     state: 'play' | 'results',
     word: string, // the randomly chose word players must type
     playersGotWord: Array<{ player: Player, time: number }>, // players who have typed the word
+    playersScore: Record<string, number>, // key is player id, value is their score for this match
     victor?: Player,
     players: Array<Player>,
 }
@@ -124,11 +125,14 @@ class Game {
                     console.log(`player id: ${newPlayer?.id} entered match id: ${matchId}`);
                 }
             }
+            const playersScore: Record<string, number> = {};
+            newMatchPlayersArray.forEach(p => playersScore[p.id] = 0);
             this.matches[matchId] = {
                 id: matchId,
                 state: 'play',
                 word: getRandomWord(),
                 players: newMatchPlayersArray,
+                playersScore,
                 playersGotWord: [],
             };
         }
@@ -176,16 +180,19 @@ class Game {
                         time: Date.now(),
                     })
                     if (match.playersGotWord.length === match.players.length) {
+                        match.playersGotWord.sort((a, b) => a.time - b.time);
+                        const playerIdWon = match.playersGotWord[0].player.id;
+                        match.playersScore[playerIdWon]++;
                         match.word = getRandomWord();
                         match.playersGotWord = [];
                         match.players.forEach(p => p.typed = '');
+                        if (match.playersScore[playerIdWon] >= 3) {
+                            console.log(`player won, id: ${player.id}`);
+                            match.victor = this.players[playerIdWon];
+                            match.state = 'results';
+                        }
                     }
                 }
-            }
-            if (data['win']) {
-                console.log(`player won, id: ${player.id}`);
-                match.victor = player;
-                match.state = 'results';
             }
         } else if (match.state === 'results') {
             if (matchEvent === 'quit') {
