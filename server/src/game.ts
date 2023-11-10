@@ -2,9 +2,6 @@ import { v4 as uuid } from "uuid";
 import { WebSocket } from "ws";
 import fs from 'fs';
 
-const WORLD_WIDTH = 320;
-const WORLD_HEIGHT = 180;
-const PLAYER_WIDTH = 16;
 const PLAYERS_PER_GAME = 2;
 
 // very bad practice! fix later
@@ -43,6 +40,7 @@ interface Match {
     id: string,
     state: 'play' | 'results',
     word: string, // the randomly chose word players must type
+    playersGotWord: Array<{ player: Player, time: number }>, // players who have typed the word
     victor?: Player,
     players: Array<Player>,
 }
@@ -131,6 +129,7 @@ class Game {
                 state: 'play',
                 word: getRandomWord(),
                 players: newMatchPlayersArray,
+                playersGotWord: [],
             };
         }
         this.queue.forEach(player => {
@@ -167,12 +166,20 @@ class Game {
         if (matchEvent === 'player_dropped') {
             this.removePlayerFromMatch(player);
         } else if (match.state === 'play') {
-            if (matchEvent === 'update') {
+            const playerHasTypedWord = match.playersGotWord.find(e => e.player === player) !== undefined;
+            if (matchEvent === 'update' && !playerHasTypedWord) {
                 const newTyped = data['typed'];
                 if (newTyped !== undefined) player.typed = newTyped;
-                if (player.typed !== undefined && player.typed.toLowerCase() === match.word.toLowerCase()) {
-                    match.word = getRandomWord();
-                    match.players.forEach(p => p.typed = '');
+                if (player.typed.toLowerCase() === match.word.toLowerCase()) {
+                    match.playersGotWord.push({
+                        player,
+                        time: Date.now(),
+                    })
+                    if (match.playersGotWord.length === match.players.length) {
+                        match.word = getRandomWord();
+                        match.playersGotWord = [];
+                        match.players.forEach(p => p.typed = '');
+                    }
                 }
             }
             if (data['win']) {

@@ -151,4 +151,12 @@ We added that logic without too much trouble. Luckily ejecting players happens i
 
 I know I want to do some sort of typing race thing, but I'm very unsure what mechanics will feel fun. I had a vision of random words appearing at the top of the screen at random locations, and falling down. But perhaps that's too complicated and annoying? Let's instead let the match choose a word, which it will send to the players. Who ever types that word first wins. First person to type 5 words first wins.
 
-This strategy of first to type the word might work. I think by pacing the words given, we could bring fun with the anticipation of typing the next word. Possibly even a sort of story feel if we could bring music into the equation. 
+This strategy of first to type the word might work. I think by pacing the words given, we could bring fun with the anticipation of typing the next word. Possibly even a sort of story feel if we could bring music into the equation.
+
+Ooh, a couple other game feel ideas:
+
+1. Right now this is two player only, so someone has to "lose". Let's allow at least 3 players per game so there's a "winner", but not necessarily a loser. That will probably feel better. 
+
+2. I was thinking first person to finish word wins that "round". But I think this feels bad. Let's let all players finish typing the word. But award points based on who finished the fastest. 
+
+I also still really like the idea of varying the pace at which words get sent out. But I'm not sure how to do this if we allow all players to finish on time. Perhaps we should ignore this feature for now and just get the system to account for points and declare a winner.
