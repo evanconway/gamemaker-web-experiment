@@ -1,3 +1,5 @@
+if (my_player_id == "") exit;
+
 var match_state = game_data[$ "state"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {

@@ -1,8 +1,7 @@
 import { v4 as uuid } from "uuid";
-import { WebSocket } from "ws";
 import fs from 'fs';
 
-const PLAYERS_PER_GAME = 2;
+const PLAYERS_PER_GAME = 1;
 
 // very bad practice! fix later
 let WORDS: Array<string> = [];
@@ -11,17 +10,20 @@ fs.readFile('./src/words.txt', 'utf8', (err, data) => {
       console.error(err);
       return;
     }
-    WORDS = data.split('\r\n');
-    console.log(WORDS);
+    // this line behaves differently in different environments!
+    // windows: \r\n
+    // macos:   \n
+    WORDS = data.split('\n');
+    console.log(`${WORDS.length} words loaded`);
 });
 
 const getRandomWord = () => {
     return WORDS[Math.floor(Math.random() * WORDS.length)];
 };
 
-type ClientState = 'title' | 'queued' | 'ingame';
+export type ClientState = 'title' | 'queued' | 'ingame';
 
-type SendPlayerData = (clientState: ClientState, data: any) => void;
+export type SendPlayerData = (clientState: ClientState, data: any) => void;
 
 // note for future projects, the concept of a "client" and a "player" in a match should be separate
 // but this project it should be fine
@@ -33,7 +35,7 @@ interface Player {
         green: number,
         blue: number,
     },
-    sendState?: SendPlayerData,
+    sendState: SendPlayerData,
 }
 
 interface Match {
@@ -61,7 +63,7 @@ class Game {
         this.matches = {};
     }
 
-    addPlayer(): string {
+    addPlayer(sendState: SendPlayerData): string {
         const newPlayerId = uuid();
         this.players[newPlayerId] = {
             id: newPlayerId,
@@ -71,24 +73,11 @@ class Game {
                 green: Math.floor(Math.random() * 256),
                 blue: Math.floor(Math.random() * 256),
             },
+            sendState,
         };
+        sendState('title', { 'your_player_id': newPlayerId });
         console.log(`added player id: ${newPlayerId}`);
         return newPlayerId;
-    }
-
-    connectPlayerToSocketConnection(playerId: string, ws: WebSocket) {
-        const player = this.players[playerId];
-        if (player === undefined) {
-            console.log(`playerId: ${playerId} does not exist`);
-            return;
-        }
-        const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
-                clientState,
-                data,
-        }));
-        this.players[playerId].sendState = sendState;
-        console.log(`player ${playerId} web socket connection established`);
-        sendState('title', {});
     }
 
     getPlayerMatch(player: Player) {

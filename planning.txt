@@ -164,3 +164,10 @@ I also still really like the idea of varying the pace at which words get sent ou
 We got the system to a point where you can "win". There's still a lot that's gross or crude, but this is a big mileston. Tomorrow we'll look at the mechanics again with a fresh mind, and better assess how to make it fun.
 
 We tried to deploy to gx games, but gx games explicitly forbids non https requests. Damn. Let's definitely shift over to strictly using TCP tomorrow. I'm sure we could figure out how to get a signed certificate but I can't be bothered. And the http server was never necessary anyway.
+
+
+10th of November, 2023
+
+Let's start by completely removing the http element of the game.
+
+Small note. As I'm working through this, I'm not sure the client even needs to know its own id?

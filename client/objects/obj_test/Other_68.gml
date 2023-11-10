@@ -20,9 +20,7 @@ if (type == network_type_non_blocking_connect) {
 	debug_log($"Socket connection established!");
 	
 	// send player id once connection is established
-	if (my_player_id != "") {
-		send_server_data("connect_player_id", { "player_id": my_player_id });
-	}
+	//if (my_player_id != "") send_server_data("connect_player_id", { "player_id": my_player_id });
 }
 
 if (type == network_type_data) {
@@ -34,6 +32,9 @@ if (type == network_type_data) {
 		game_data = temp_data[$ "data"];
 		application_state = temp_data[$ "clientState"];
 	} catch(err) {}
+	if (variable_struct_exists(game_data, "your_player_id")) {
+		my_player_id = variable_struct_get(game_data, "your_player_id");
+	}
 	debug_log($"application_state: {application_state}");
 	debug_log(game_data);
 }

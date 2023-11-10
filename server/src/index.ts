@@ -1,6 +1,4 @@
-console.log("hello world");
+console.log("starting server...");
 import startSocketServer from "./socket";
-import startHttpServer from "./http";
 
 startSocketServer();
-startHttpServer();

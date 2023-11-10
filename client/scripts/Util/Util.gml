@@ -1,4 +1,4 @@
-global.domain = "206.81.8.93";
+global.domain = "localhost";
 
 /**
  * Takes a struct, stringifies it as JSON, writes it to a buffer.

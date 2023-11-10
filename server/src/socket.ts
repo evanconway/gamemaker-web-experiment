@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import game, { ReceivedEvent } from "./game";
+import game, { ClientState, ReceivedEvent, SendPlayerData } from "./game";
 
 const startSocketServer = () => {
     const port = 5000;
@@ -9,7 +9,11 @@ const startSocketServer = () => {
     });
 
     socketWebServer.on('connection', function connection(ws) {
-        let socket_player_id = "";
+        const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
+            clientState,
+            data,
+        }));
+        const socketPlayerId = game.addPlayer(sendState);;
         
         ws.on('message', function message(data) {
             const rawString = data.toString();
@@ -17,24 +21,18 @@ const startSocketServer = () => {
             const dataString = rawString.slice(0, rawString.length - 1);
             const dataObj = JSON.parse(dataString);
             const event = dataObj['event'] as ReceivedEvent;
-
-            if (event === 'connect_player_id') {
-                console.log(`connecting player: ${dataString}`);
-                socket_player_id = dataObj['data']['player_id'];
-                game.connectPlayerToSocketConnection(socket_player_id, ws);
-            } else {
-                game.handleMessageReceived(event, dataObj['data']);
-            }
+            game.handleMessageReceived(event, dataObj['data']);
+            
         });
 
         ws.on('error', (err) => {
             console.error(err.message);
-            game.deletePlayer(socket_player_id);
+            game.deletePlayer(socketPlayerId);
         });
 
         ws.on("close", () => {
-            console.log("Client disconnected");
-            game.deletePlayer(socket_player_id);
+            console.log("client disconnected");
+            game.deletePlayer(socketPlayerId);
         });
     });
 };

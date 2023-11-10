@@ -3,7 +3,9 @@ draw_set_font(fnt_game);
 socket = -1;
 
 my_player_id = "";
-request_player_id_http_req_id = http_request("http://" + global.domain + ":8000/start", "GET", ds_map_create(), "");
+debug_log("starting socket connection...");
+socket = network_create_socket(network_socket_ws);
+network_connect_raw_async(socket, global.domain, 5000);
 
 application_state = "connecting_to_server";
 application_state_prev = application_state;
