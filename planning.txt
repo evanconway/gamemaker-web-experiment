@@ -186,3 +186,17 @@ That wasn't too tricky to update. I think we also need some sort of delay betwee
 Let's add some sound effects, better display for error typing, and see how we feel.
 
 Just had a crazy idea to call it "The Weight of Words", and make the primary mechanic have something to do with not having too many words pile on top of you. Or something.
+
+12th of November, 2023
+
+Actually, I think I'm over complicating this. Let's remove the idea that everyone must type the same word. We'll simply give clients a randomized list of words, though all clients within a match will receive the same randomized list of words. Whoever types the entire list first wins...
+
+Actually no. Let's commit to a randomized list of words that all clients must type, but let's make it point based instead of word based. Typing a word awards points based on the characters in that word. But let's also introduce buffs and debuffs that can be applied to the other clients. This will give us a small amount of interactivity between competitors.
+
+(later that day)
+
+After some rest I've realized we need to make sure we have a finished product ASAP. Let's cut the idea of a point system, and the mid-match-powerups. Let's shoot for first player to type 200 words or so, but also improve the match start. We have the start of a song. Let's create a simple animation for the start of matches synched with this song. That'll give us a framework to change it later.
+
+In addition to the match structure change and beginning animation I described above, we'll also need a better way to display the words and what the user has typed. The user needs to be able to clearly see what they typed, mistakes and all, as well as the words they need to type and the words they need to type next. 
+
+Let's try the list displayed above the target word, and the user typing displayed below the target word. Target word will be directly in the middle of the screen. Eventually I'd like the typed text to have characters color coded based on correct vs incorrect, but let's call that a stretch goal for now.
