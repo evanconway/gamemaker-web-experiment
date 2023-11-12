@@ -11,8 +11,7 @@ if (application_state == "connecting_to_server") {
 	draw_text_centered("Searching for a game...");
 } else if (application_state == "ingame") {
 	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
-	var progress_bar_height = 2;
-	var entry_height = string_height("ABC") + progress_bar_height;
+	var entry_height = floor(string_height("ABC"));
 	for (var i = 0; i < array_length(players); i++) {
 		var player = players[i];
 		var player_color = make_color_rgb(player.color.red, player.color.green, player.color.blue);
@@ -21,10 +20,17 @@ if (application_state == "connecting_to_server") {
 		draw_set_alpha(1);
 		var is_you = player.id == my_player_id;
 		var player_typed_display = string_lower($"{is_you ? "YOU " : "OPPONENT"}: \"{is_you ? typed : text}\"");
-		draw_text(0, entry_height * i - progress_bar_height, player_typed_display);
-		var progress = game_data[$ "playersWordIndex"][$ my_player_id] / game_data[$ "wordsToWin"];
-		var bar_y = entry_height * i + entry_height - progress_bar_height;
-		draw_rectangle(0, bar_y, floor(display_get_gui_width() * progress), bar_y + progress_bar_height, false);
+		draw_text(0, entry_height * i, player_typed_display);
+		var progress = game_data[$ "playersWordIndex"][$ player.id] / game_data[$ "wordsToWin"];
+		draw_set_halign(fa_right);
+		draw_text(display_get_gui_width(), entry_height * i, $"{floor(progress * 100)}%");
+		draw_set_halign(fa_left);
+		
+		if (match_state != "results") {
+			var progress_bar_height = 2;
+			var bar_y = entry_height * i + entry_height - progress_bar_height;
+			draw_rectangle(0, bar_y, floor(display_get_gui_width() * progress), bar_y + progress_bar_height, false);
+		}
 	}
 	
 	draw_set_color(c_white);
@@ -37,7 +43,7 @@ if (application_state == "connecting_to_server") {
 		draw_set_color(c_dkgray);
 		for (var i = 1; i < array_length(game_data[$ "words"]); i++) {
 			var word = game_data[$ "words"][i];
-			draw_text_centered(word, string_height(word) * i);
+			draw_text_centered(word, entry_height * i);
 		}
 		draw_set_color(c_white);
 		draw_text_centered(game_data[$ "words"][0]);

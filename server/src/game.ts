@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import fs from 'fs';
 
 const PLAYERS_PER_GAME = 1;
-const WORDS_TO_WIN = 100;
+const WORDS_TO_WIN = 40;
 
 // very bad practice! fix later
 let WORDS: Array<string> = [];
