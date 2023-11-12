@@ -184,3 +184,5 @@ Let's do this rewrite, then assess.
 That wasn't too tricky to update. I think we also need some sort of delay between the getting a word, and displaying the next word. Just a moment to acknowledge that the user got the word. Or maybe that would be annoying? If you're racing through words the pause before the next word would be frustrating.
 
 Let's add some sound effects, better display for error typing, and see how we feel.
+
+Just had a crazy idea to call it "The Weight of Words", and make the primary mechanic have something to do with not having too many words pile on top of you. Or something.
