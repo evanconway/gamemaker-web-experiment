@@ -57,7 +57,6 @@ function get_text_pressed() {
 function draw_text_centered(text, v_offset=0) {
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
-	draw_set_color(c_white);
 	draw_set_alpha(1);
 	var draw_x = display_get_gui_width() / 2;
 	var draw_y = display_get_gui_height() / 2;
@@ -67,7 +66,7 @@ function draw_text_centered(text, v_offset=0) {
 /**
  * @param {Asset.GMSound}
  */
-function play_sound(sound, amplitude = 1) {
+function play_sound(sound, amplitude = 0.5) {
 	audio_stop_sound(sound);
 	audio_play_sound(sound, 0, false, amplitude);
 }

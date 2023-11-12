@@ -200,3 +200,9 @@ After some rest I've realized we need to make sure we have a finished product AS
 In addition to the match structure change and beginning animation I described above, we'll also need a better way to display the words and what the user has typed. The user needs to be able to clearly see what they typed, mistakes and all, as well as the words they need to type and the words they need to type next. 
 
 Let's try the list displayed above the target word, and the user typing displayed below the target word. Target word will be directly in the middle of the screen. Eventually I'd like the typed text to have characters color coded based on correct vs incorrect, but let's call that a stretch goal for now.
+
+Is it ok to send the entire word list to the client? We'll start by sending the entire list but we'll have to test performance.
+
+Actually... let's do the performance fix right now, because it'll simply our word rendering later.
+
+We can store player progress along the word list in the match data.

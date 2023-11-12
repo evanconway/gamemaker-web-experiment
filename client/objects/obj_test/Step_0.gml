@@ -3,7 +3,7 @@ if (my_player_id == "") exit;
 var match_state = game_data[$ "state"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
-	ready_time = 3000000;
+	ready_time = 1000000;
 }
 
 if (application_state == "title") {
@@ -27,7 +27,7 @@ if (application_state == "title") {
 	var typed_pre_input = typed;
 	
 	var lowered_typed = string_lower(typed);
-	var lowered_word = string_lower(game_data[$ "word"]);
+	var lowered_word = string_lower(game_data[$ "words"][game_data[$ "playersWordIndex"]]);
 	
 	// don't allow input if player already has word
 	if (lowered_typed != lowered_word) {

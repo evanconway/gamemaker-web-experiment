@@ -42,9 +42,8 @@ interface Player {
 interface Match {
     id: string,
     state: 'play' | 'results',
-    word: string, // the randomly chose word players must type
-    playersGotWord: Array<{ player: Player, time: number }>, // players who have typed the word
-    playersScore: Record<string, number>, // key is player id, value is their score for this match
+    words: Array<string>, // the randomly chose words players must type
+    playersWordIndex: Record<string, number>, // word players are currently typing
     victor?: Player,
     players: Array<Player>,
 }
@@ -105,7 +104,19 @@ class Game {
     sendClientMatchData(player: Player, overwriteClient = false) {
         const match = this.getPlayerMatch(player);
         if (match === undefined) return;
-        this.sendClientData(player, 'ingame', { ...match, overwriteClient });
+        const playerWords = new Array<string>();
+        const playerWordIndex = match.playersWordIndex[player.id];
+        for (let i = playerWordIndex; (i < playerWordIndex + 10) && (i < match.words.length); i++) { 
+            playerWords.push(match.words[i]);
+        }
+        this.sendClientData(player, 'ingame', {
+            players: match.players,
+            playersWordIndex: match.playersWordIndex,
+            state: match.state,
+            victor: match.victor,
+            words: playerWords,
+            overwriteClient,
+        });
     }
 
     startMatches() {
@@ -121,15 +132,16 @@ class Game {
                     console.log(`player id: ${newPlayer?.id} entered match id: ${matchId}`);
                 }
             }
-            const playersScore: Record<string, number> = {};
-            newMatchPlayersArray.forEach(p => playersScore[p.id] = 0);
+            const playersWordIndex: Record<string, number> = {};
+            newMatchPlayersArray.forEach(p => playersWordIndex[p.id] = 0);
+            const words = new Array<string>(WORDS_TO_WIN);
+            for (let i = 0; i < words.length; i++) words[i] = getRandomWord();
             this.matches[matchId] = {
                 id: matchId,
                 state: 'play',
-                word: getRandomWord(),
+                words,
+                playersWordIndex,
                 players: newMatchPlayersArray,
-                playersScore,
-                playersGotWord: [],
             };
         }
         this.queue.forEach(player => {
@@ -147,6 +159,11 @@ class Game {
         const match = this.getPlayerMatch(player);
         if (match === undefined) return undefined;
         match.players = match.players.filter(p => p !== player);
+        const filteredPlayersWordIndex: typeof match.playersWordIndex = {};
+        for (const playerId in match.playersWordIndex) {
+            if (playerId !== player.id) filteredPlayersWordIndex[playerId] = match.playersWordIndex[playerId];
+        }
+        match.playersWordIndex = filteredPlayersWordIndex;
         if (match.players.length <= 0) {
             const filteredMatches: typeof this.matches = {};
             for (const id in this.matches) {
@@ -160,36 +177,26 @@ class Game {
     }
 
     updateMatch(player: Player, data: any) {
-        let overwriteClient = false;
+        let overwriteThisPlayerClient = false;
+        let overwriteAllPlayerClient = false;
         const match = this.getPlayerMatch(player);
         if (match === undefined) return;
         const matchEvent = data['match_event'] as MatchEvent;
         if (matchEvent === 'player_dropped') {
             this.removePlayerFromMatch(player);
         } else if (match.state === 'play') {
-            const playerHasTypedWord = match.playersGotWord.find(e => e.player === player) !== undefined;
-            if (matchEvent === 'update' && !playerHasTypedWord) {
-                const newTyped = data['typed'];
-                if (newTyped !== undefined) player.typed = newTyped;
-                if (player.typed.toLowerCase() === match.word.toLowerCase()) {
-                    match.playersGotWord.push({
-                        player,
-                        time: Date.now(),
-                    })
-                    if (match.playersGotWord.length === match.players.length) {
-                        match.playersGotWord.sort((a, b) => a.time - b.time);
-                        const playerIdWon = match.playersGotWord[0].player.id;
-                        match.playersScore[playerIdWon]++;
-                        match.word = getRandomWord();
-                        match.playersGotWord = [];
-                        match.players.forEach(p => p.typed = '');
-                        overwriteClient = true;
-                        if (match.playersScore[playerIdWon] >= WORDS_TO_WIN) {
-                            console.log(`player won, id: ${player.id}`);
-                            match.victor = this.players[playerIdWon];
-                            match.state = 'results';
-                        }
-                    }
+            const newTyped = data['typed'];
+            if (newTyped !== undefined) player.typed = newTyped;
+            const targetWord = match.words[match.playersWordIndex[player.id]];
+            if (player.typed.toLowerCase() === targetWord.toLowerCase()) {
+                overwriteThisPlayerClient = true;
+                match.playersWordIndex[player.id]++;
+                player.typed = '';
+                if (match.playersWordIndex[player.id] >= match.words.length) {
+                    overwriteAllPlayerClient = true;
+                    console.log(`player won, id: ${player.id}`);
+                    match.victor = player;
+                    match.state = 'results';
                 }
             }
         } else if (match.state === 'results') {
@@ -197,7 +204,10 @@ class Game {
                 this.removePlayerFromMatch(player);
             }
         }
-        match.players.forEach(p => this.sendClientMatchData(p, overwriteClient));
+        match.players.forEach(p => {
+            const overwrite = overwriteAllPlayerClient ? true : overwriteThisPlayerClient && p === player ? true : false;
+            this.sendClientMatchData(p, overwrite);
+        });
     }
 
     handleMessageReceived(event: ReceivedEvent, data: any) {

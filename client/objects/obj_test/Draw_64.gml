@@ -28,8 +28,13 @@ if (application_state == "connecting_to_server") {
 		draw_text_centered($"game starts in: {floor(ready_time / 1000000) + 1}");
 	}
 	if (match_state == "play" && ready_time <= 0) {
-		var word = game_data[$ "word"];
-		draw_text_centered(word);
+		draw_set_color(c_dkgray);
+		for (var i = 1; i < array_length(game_data[$ "words"]); i++) {
+			var word = game_data[$ "words"][i];
+			draw_text_centered(word, string_height(word) * i);
+		}
+		draw_set_color(c_white);
+		draw_text_centered(game_data[$ "words"][0]);
 	}
 	if (match_state == "results") {
 		var won = game_data.victor.id == my_player_id;
