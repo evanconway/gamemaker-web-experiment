@@ -18,7 +18,7 @@ if (application_state == "connecting_to_server") {
 		draw_set_color(player_color);
 		draw_set_alpha(1);
 		var is_you = player.id == my_player_id;
-		draw_text(0, 16 * i, $"{is_you ? "YOU " : "OPPONENT"}: \"{text}\"");
+		draw_text(0, 16 * i, $"{is_you ? "YOU " : "OPPONENT"}: \"{is_you ? typed : text}\"");
 	}
 	
 	draw_set_color(c_white);

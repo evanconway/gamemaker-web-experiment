@@ -24,18 +24,22 @@ if (application_state == "title") {
 	if (my_index < 0) exit;
 
 	var player = players[my_index];
+	var typed_pre_input = typed;
+	
+	var lowered_typed = string_lower(typed);
+	var lowered_word = string_lower(game_data[$ "word"]);
 	
 	// don't allow input if player already has word
-	if (player.typed != game_data[$ "word"]) {
-		var text_typed = player.typed + get_text_pressed();
+	if (lowered_typed != lowered_word) {
+		typed += get_text_pressed();
 		if (keyboard_check_pressed(vk_backspace)) {
-			text_typed = string_delete(text_typed, string_length(text_typed), 1);
+			typed = string_delete(typed, string_length(typed), 1);
 		}
 	
-		if (text_typed != player.typed) {
-			show_debug_message($"typed: {text_typed}");
+		if (typed_pre_input != typed) {
+			show_debug_message($"typed: {typed}");
 			to_send[$ "match_event"] = "update";
-			to_send[$ "typed"] = text_typed;
+			to_send[$ "typed"] = typed;
 		}
 	}
 	

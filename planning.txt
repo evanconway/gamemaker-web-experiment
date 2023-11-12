@@ -171,3 +171,12 @@ We tried to deploy to gx games, but gx games explicitly forbids non https reques
 Let's start by completely removing the http element of the game.
 
 Small note. As I'm working through this, I'm not sure the client even needs to know its own id?
+
+
+11th of November, 2023
+
+Last session we were able to slightly improve the display of gamestate. And we simplified the networking a bit by removing the entire http server and moving it's functionality to the socket server. Our next major hurdle is making the game actually fun.
+
+Although I have a number of ideas. I think something we should cover first is exploring game feel of typing a word. It needs to feel good. And I think the first step to fixing that is optimistic updates. Right now you don't see your typing update until the client has informed the server, and the server has resopnded to the client. That's quite a delay locally, and it's only going to get worse once deployed.
+
+Let's do this rewrite, then assess.

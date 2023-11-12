@@ -31,6 +31,14 @@ if (type == network_type_data) {
 		var temp_data = json_parse(json_string);
 		game_data = temp_data[$ "data"];
 		application_state = temp_data[$ "clientState"];
+		// feather ignore once GM1011
+		if (game_data[$ "overwriteClient"]) {
+			// feather ignore once GM1041
+			for (var i = 0; i < array_length(game_data.players); i++) {
+				// feather ignore once GM1028
+				if (game_data.players[i].id == my_player_id) typed = game_data.players[i].typed;
+			}
+		}
 	} catch(err) {}
 	if (variable_struct_exists(game_data, "your_player_id")) {
 		my_player_id = variable_struct_get(game_data, "your_player_id");

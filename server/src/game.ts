@@ -13,7 +13,7 @@ fs.readFile('./src/words.txt', 'utf8', (err, data) => {
     // this line behaves differently in different environments!
     // windows: \r\n
     // macos:   \n
-    WORDS = data.split('\n');
+    WORDS = data.split('\r\n');
     console.log(`${WORDS.length} words loaded`);
 });
 
@@ -94,11 +94,17 @@ class Game {
         sendData(clientState, data);
     }
 
-    sendClientMatchData(player: Player) {
+    /**
+     * Sends given player data about their current match, if they're in one.
+     * 
+     * @param player 
+     * @param overwriteClient Indicates if client should be forced to overwrite client data with server data. Otherwise client decides.
+     * @returns 
+     */
+    sendClientMatchData(player: Player, overwriteClient = false) {
         const match = this.getPlayerMatch(player);
         if (match === undefined) return;
-        console.log(`sending player id: ${player.id} data for match id ${match.id}`);
-        this.sendClientData(player, 'ingame', match);
+        this.sendClientData(player, 'ingame', { ...match, overwriteClient });
     }
 
     startMatches() {
@@ -153,6 +159,7 @@ class Game {
     }
 
     updateMatch(player: Player, data: any) {
+        let overwriteClient = false;
         const match = this.getPlayerMatch(player);
         if (match === undefined) return;
         const matchEvent = data['match_event'] as MatchEvent;
@@ -175,6 +182,7 @@ class Game {
                         match.word = getRandomWord();
                         match.playersGotWord = [];
                         match.players.forEach(p => p.typed = '');
+                        overwriteClient = true;
                         if (match.playersScore[playerIdWon] >= 3) {
                             console.log(`player won, id: ${player.id}`);
                             match.victor = this.players[playerIdWon];
@@ -188,7 +196,7 @@ class Game {
                 this.removePlayerFromMatch(player);
             }
         }
-        match.players.forEach(p => this.sendClientMatchData(p));
+        match.players.forEach(p => this.sendClientMatchData(p, overwriteClient));
     }
 
     handleMessageReceived(event: ReceivedEvent, data: any) {
