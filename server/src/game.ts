@@ -112,6 +112,7 @@ class Game {
         this.sendClientData(player, 'ingame', {
             players: match.players,
             playersWordIndex: match.playersWordIndex,
+            wordsToWin: WORDS_TO_WIN,
             state: match.state,
             victor: match.victor,
             words: playerWords,

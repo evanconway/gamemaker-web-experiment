@@ -206,3 +206,6 @@ Is it ok to send the entire word list to the client? We'll start by sending the 
 Actually... let's do the performance fix right now, because it'll simply our word rendering later.
 
 We can store player progress along the word list in the match data.
+
+
+We were able to complete a more straightforward structure. Let's add some display sugar at the top of the game that shows player progress along the race.

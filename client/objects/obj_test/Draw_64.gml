@@ -11,6 +11,8 @@ if (application_state == "connecting_to_server") {
 	draw_text_centered("Searching for a game...");
 } else if (application_state == "ingame") {
 	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
+	var progress_bar_height = 2;
+	var entry_height = string_height("ABC") + progress_bar_height;
 	for (var i = 0; i < array_length(players); i++) {
 		var player = players[i];
 		var player_color = make_color_rgb(player.color.red, player.color.green, player.color.blue);
@@ -18,7 +20,11 @@ if (application_state == "connecting_to_server") {
 		draw_set_color(player_color);
 		draw_set_alpha(1);
 		var is_you = player.id == my_player_id;
-		draw_text(0, 16 * i, $"{is_you ? "YOU " : "OPPONENT"}: \"{is_you ? typed : text}\"");
+		var player_typed_display = string_lower($"{is_you ? "YOU " : "OPPONENT"}: \"{is_you ? typed : text}\"");
+		draw_text(0, entry_height * i - progress_bar_height, player_typed_display);
+		var progress = game_data[$ "playersWordIndex"][$ my_player_id] / game_data[$ "wordsToWin"];
+		var bar_y = entry_height * i + entry_height - progress_bar_height;
+		draw_rectangle(0, bar_y, floor(display_get_gui_width() * progress), bar_y + progress_bar_height, false);
 	}
 	
 	draw_set_color(c_white);
