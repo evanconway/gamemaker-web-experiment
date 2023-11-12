@@ -35,10 +35,12 @@ if (application_state == "title") {
 		if (keyboard_check_pressed(vk_backspace)) {
 			typed = string_delete(typed, string_length(typed), 1);
 		}
-	
+		lowered_typed = string_lower(typed); // reassign lowered value after typing
 		if (typed_pre_input != typed) {
-			play_sound(snd_type);
-			show_debug_message($"typed: {typed}");
+			if (lowered_word == lowered_typed) play_sound(snd_success);
+			else if (string_length(typed_pre_input) > string_length(typed)) play_sound(snd_delete);
+			else if (string_starts_with(lowered_word, lowered_typed)) play_sound(snd_type);
+			else play_sound(snd_type_wrong);
 			to_send[$ "match_event"] = "update";
 			to_send[$ "typed"] = typed;
 		}

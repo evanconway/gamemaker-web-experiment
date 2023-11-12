@@ -21,8 +21,11 @@
     {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},},
     {"id":{"name":"fnt_game","path":"fonts/fnt_game/fnt_game.yy",},},
     {"id":{"name":"snd_type","path":"sounds/snd_type/snd_type.yy",},},
+    {"id":{"name":"snd_delete","path":"sounds/snd_delete/snd_delete.yy",},},
+    {"id":{"name":"snd_type_wrong","path":"sounds/snd_type_wrong/snd_type_wrong.yy",},},
     {"id":{"name":"Util","path":"scripts/Util/Util.yy",},},
     {"id":{"name":"obj_camera","path":"objects/obj_camera/obj_camera.yy",},},
+    {"id":{"name":"snd_success","path":"sounds/snd_success/snd_success.yy",},},
     {"id":{"name":"rm_test","path":"rooms/rm_test/rm_test.yy",},},
   ],
   "RoomOrderNodes": [

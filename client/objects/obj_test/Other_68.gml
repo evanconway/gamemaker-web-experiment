@@ -18,9 +18,6 @@ for (var i = 0; i < array_length(keys); i++) {
 
 if (type == network_type_non_blocking_connect) {
 	debug_log($"Socket connection established!");
-	
-	// send player id once connection is established
-	//if (my_player_id != "") send_server_data("connect_player_id", { "player_id": my_player_id });
 }
 
 if (type == network_type_data) {

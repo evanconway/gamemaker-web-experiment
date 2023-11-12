@@ -1,7 +1,7 @@
 {
   "resourceType": "GMSound",
   "resourceVersion": "1.0",
-  "name": "snd_type",
+  "name": "snd_type_wrong",
   "audioGroupId": {
     "name": "audiogroup_default",
     "path": "audiogroups/audiogroup_default",
@@ -10,14 +10,14 @@
   "bitRate": 128,
   "compression": 1,
   "conversionMode": 0,
-  "duration": 0.115011,
+  "duration": 0.123696,
   "parent": {
     "name": "client",
     "path": "client.yyp",
   },
   "preload": false,
   "sampleRate": 44100,
-  "soundFile": "snd_type.wav",
+  "soundFile": "snd_type_wrong.wav",
   "type": 0,
   "volume": 1.0,
 }
