@@ -180,3 +180,7 @@ Last session we were able to slightly improve the display of gamestate. And we s
 Although I have a number of ideas. I think something we should cover first is exploring game feel of typing a word. It needs to feel good. And I think the first step to fixing that is optimistic updates. Right now you don't see your typing update until the client has informed the server, and the server has resopnded to the client. That's quite a delay locally, and it's only going to get worse once deployed.
 
 Let's do this rewrite, then assess.
+
+That wasn't too tricky to update. I think we also need some sort of delay between the getting a word, and displaying the next word. Just a moment to acknowledge that the user got the word. Or maybe that would be annoying? If you're racing through words the pause before the next word would be frustrating.
+
+Let's add some sound effects, better display for error typing, and see how we feel.

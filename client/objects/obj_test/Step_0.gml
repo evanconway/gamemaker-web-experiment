@@ -37,6 +37,7 @@ if (application_state == "title") {
 		}
 	
 		if (typed_pre_input != typed) {
+			play_sound(snd_type);
 			show_debug_message($"typed: {typed}");
 			to_send[$ "match_event"] = "update";
 			to_send[$ "typed"] = typed;

@@ -63,3 +63,11 @@ function draw_text_centered(text, v_offset=0) {
 	var draw_y = display_get_gui_height() / 2;
 	draw_text(draw_x, draw_y + v_offset, text);
 }
+
+/**
+ * @param {Asset.GMSound}
+ */
+function play_sound(sound, amplitude = 1) {
+	audio_stop_sound(sound);
+	audio_play_sound(sound, 0, false, amplitude);
+}
