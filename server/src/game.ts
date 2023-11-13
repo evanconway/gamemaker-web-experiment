@@ -13,7 +13,7 @@ fs.readFile('./src/words.txt', 'utf8', (err, data) => {
     }
     // this line behaves differently in different environments!
     // windows: \r\n
-    // macos:   \n
+    // macos/linux:   \n
     WORDS = data.split('\r\n');
     console.log(`${WORDS.length} words loaded`);
 });
@@ -119,6 +119,7 @@ class Game {
             }
         }
         console.log(`added player id: ${newPlayer.id}`);
+        console.log(`player count: ${Object.keys(this.players).length}`);
         return newPlayer.id;
     }
 
@@ -151,12 +152,10 @@ class Game {
         }
         this.queue.forEach(player => {
             player.clientState = 'queued';
-            console.log(`player id: ${player.id} queued`);
             this.sendClientData(player);
         });
         for (const key in this.matches) {
             const match = this.matches[key];
-            console.log(`sending match data for match id: ${match.id}`);
             match.players.forEach(p => {
                 p.clientState = 'ingame';
                 this.sendClientData(p);
@@ -252,6 +251,8 @@ class Game {
             this.sendClientData(this.players[id]);
         }
         this.startMatches();
+        console.log(`removed player id: ${playerId}`);
+        console.log(`player count: ${Object.keys(this.players).length}`);
     }
 }
 
