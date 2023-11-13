@@ -59,7 +59,7 @@ if (application_state == "connecting_to_server") {
 			var word = game_data[$ "words"][i];
 			draw_text_centered(word, entry_height * i);
 		}
-		draw_set_color(c_white);
+		draw_set_color(ready_time <= 0 ? c_white : c_dkgray);
 		draw_text_centered(game_data[$ "words"][0]);
 	}
 	if (match_state == "results") {

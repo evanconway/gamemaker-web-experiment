@@ -10,6 +10,7 @@ if (application_state_prev != "ingame" && application_state == "ingame") {
 if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);
 
 if (application_state == "title") {
+	ready_time = 9999999;
 	if (keyboard_check_pressed(vk_anykey)) {
 		send_server_data("player_add_to_queue", { player_id: my_player_id });
 	}
