@@ -12,8 +12,8 @@ fs.readFile('./src/words.txt', 'utf8', (err, data) => {
       return;
     }
     // this line behaves differently in different environments!
-    // windows: \r\n
-    // macos:   \n
+    // windows:     \r\n
+    // macos/linux: \n
     WORDS = data.split('\n');
     console.log(`${WORDS.length} words loaded`);
 });
