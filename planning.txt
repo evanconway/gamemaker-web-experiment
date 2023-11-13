@@ -207,5 +207,6 @@ Actually... let's do the performance fix right now, because it'll simply our wor
 
 We can store player progress along the word list in the match data.
 
-
 We were able to complete a more straightforward structure. Let's add some display sugar at the top of the game that shows player progress along the race.
+
+Added a descent bar display. It's starting to feel like a game now. I decided it makes sense to show the player how many other users are online, but this is turning out to be tricky and annoying to add. I think it's because our state system is not elegant. We started by doing some sort of event based system, so we only sent the client the data they needed given an event. But I've decided I don't like this. Instead let's make a single function that sends the client their entire state. So the client just has to mindlessly draw it. No need to cherry pick which aspects to update based on the data sent.

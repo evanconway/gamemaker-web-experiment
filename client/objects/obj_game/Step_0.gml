@@ -1,6 +1,6 @@
 if (my_player_id == "") exit;
 
-var match_state = game_data[$ "state"];
+var match_state = game_data[$ "matchState"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
 	ready_time = 1000000;

@@ -1,4 +1,4 @@
-var match_state = game_data[$ "state"];
+var match_state = game_data[$ "matchState"];
 
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
@@ -6,8 +6,14 @@ draw_set_valign(fa_top);
 if (application_state == "connecting_to_server") {
 	draw_text_centered("Connecting to server...");
 } else if (application_state == "title") {
+	draw_set_color(c_white);
+	draw_set_alpha(1)
+	draw_text(0, 0, $"players online: {game_data[$ "playersOnline"]}");
 	draw_text_centered("Ready to play?\nPress any key to search for a match.");
 } else if (application_state == "queued") {
+	draw_set_color(c_white);
+	draw_set_alpha(1)
+	draw_text(0, 0, $"players online: {game_data[$ "playersOnline"]}");
 	draw_text_centered("Searching for a game...");
 } else if (application_state == "ingame") {
 	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
@@ -19,7 +25,7 @@ if (application_state == "connecting_to_server") {
 		draw_set_color(player_color);
 		draw_set_alpha(1);
 		var is_you = player.id == my_player_id;
-		var player_typed_display = string_lower($"{is_you ? "YOU " : "OPPONENT"}: \"{is_you ? typed : text}\"");
+		var player_typed_display = string_lower($"{is_you ? "YOU" : "OPP"}: \"{is_you ? typed : text}\"");
 		draw_text(0, entry_height * i, player_typed_display);
 		var progress = game_data[$ "playersWordIndex"][$ player.id] / game_data[$ "wordsToWin"];
 		draw_set_halign(fa_right);

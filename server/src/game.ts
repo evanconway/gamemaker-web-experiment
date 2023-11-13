@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import fs from 'fs';
 
-const PLAYERS_PER_GAME = 1;
+const PLAYERS_PER_GAME = 10;
 const WORDS_TO_WIN = 40;
 
 // very bad practice! fix later
@@ -22,7 +22,7 @@ const getRandomWord = () => {
     return WORDS[Math.floor(Math.random() * WORDS.length)];
 };
 
-export type ClientState = 'title' | 'queued' | 'ingame';
+export type ClientState = undefined | 'title' | 'queued' | 'ingame';
 
 export type SendPlayerData = (clientState: ClientState, data: any) => void;
 
@@ -30,6 +30,7 @@ export type SendPlayerData = (clientState: ClientState, data: any) => void;
 // but this project it should be fine
 interface Player {
     id: string,
+    clientState: ClientState,
     typed: string, // typed characters by the player
     color: {
         red: number,
@@ -63,23 +64,6 @@ class Game {
         this.matches = {};
     }
 
-    addPlayer(sendState: SendPlayerData): string {
-        const newPlayerId = uuid();
-        this.players[newPlayerId] = {
-            id: newPlayerId,
-            typed: "",
-            color: {
-                red: Math.floor(Math.random() * 256),
-                green: Math.floor(Math.random() * 256),
-                blue: Math.floor(Math.random() * 256),
-            },
-            sendState,
-        };
-        sendState('title', { 'your_player_id': newPlayerId });
-        console.log(`added player id: ${newPlayerId}`);
-        return newPlayerId;
-    }
-
     getPlayerMatch(player: Player) {
         for (const key in this.matches) {
             const match = this.matches[key];
@@ -88,45 +72,65 @@ class Game {
         return undefined;
     }
 
-    sendClientData(player: Player, clientState: ClientState, data: any) {
+    sendClientData(player: Player, overwriteClient=false) {
         const sendData = player.sendState;
         if (sendData === undefined) return;
-        sendData(clientState, data);
-    }
-
-    /**
-     * Sends given player data about their current match, if they're in one.
-     * 
-     * @param player 
-     * @param overwriteClient Indicates if client should be forced to overwrite client data with server data. Otherwise client decides.
-     * @returns 
-     */
-    sendClientMatchData(player: Player, overwriteClient = false) {
         const match = this.getPlayerMatch(player);
-        if (match === undefined) return;
         const playerWords = new Array<string>();
-        const playerWordIndex = match.playersWordIndex[player.id];
-        for (let i = playerWordIndex; (i < playerWordIndex + 10) && (i < match.words.length); i++) { 
-            playerWords.push(match.words[i]);
+        if (match !== undefined) {
+            const playerWordIndex = match.playersWordIndex[player.id];
+            for (let i = playerWordIndex; (i < playerWordIndex + 10) && (i < match.words.length); i++) { 
+                playerWords.push(match.words[i]);
+            }
         }
-        this.sendClientData(player, 'ingame', {
+        const matchData = match === undefined ? undefined : {
             players: match.players,
             playersWordIndex: match.playersWordIndex,
             wordsToWin: WORDS_TO_WIN,
-            state: match.state,
+            matchState: match.state,
             victor: match.victor,
             words: playerWords,
             overwriteClient,
+        };
+        sendData(player.clientState, {
+            your_player_id: player.id,
+            playersOnline: Object.keys(this.players).length,
+            ...matchData,
         });
     }
 
+    addPlayer(sendState: SendPlayerData): string {
+        const newPlayer: Player = {
+            id: uuid(),
+            clientState: 'title',
+            typed: "",
+            color: {
+                red: Math.floor(Math.random() * 256),
+                green: Math.floor(Math.random() * 256),
+                blue: Math.floor(Math.random() * 256),
+            },
+            sendState,
+        };
+        this.players[newPlayer.id] = newPlayer;
+        this.sendClientData(newPlayer);
+        for (const id in this.players) {
+            if (id !== newPlayer.id) {
+                this.sendClientData(this.players[id]);
+            }
+        }
+        console.log(`added player id: ${newPlayer.id}`);
+        return newPlayer.id;
+    }
+
     startMatches() {
+        // aim for max players, but if less than that are connected use what we have
+        const matchPlayerTarget = Math.min(PLAYERS_PER_GAME, Object.keys(this.players).length);
         // players in game should get sent ingame state
         // all other players in queue should receive queued state
-        while (this.queue.length >= PLAYERS_PER_GAME) {
+        while (this.queue.length >= matchPlayerTarget) {
             const newMatchPlayersArray: Array<Player> = [];
             const matchId = uuid();
-            for (let i = 0; i < PLAYERS_PER_GAME; i++) {
+            for (let i = 0; i < matchPlayerTarget; i++) {
                 const newPlayer = this.queue.shift();
                 if (newPlayer !== undefined) {
                     newMatchPlayersArray.push(newPlayer);
@@ -146,13 +150,17 @@ class Game {
             };
         }
         this.queue.forEach(player => {
+            player.clientState = 'queued';
             console.log(`player id: ${player.id} queued`);
-            this.sendClientData(player, 'queued', {});
+            this.sendClientData(player);
         });
         for (const key in this.matches) {
             const match = this.matches[key];
             console.log(`sending match data for match id: ${match.id}`);
-            match.players.forEach(p => this.sendClientMatchData(p));
+            match.players.forEach(p => {
+                p.clientState = 'ingame';
+                this.sendClientData(p);
+            });
         }
     }
 
@@ -172,7 +180,8 @@ class Game {
             }
             this.matches = filteredMatches;
         }
-        this.sendClientData(player, 'title', {});
+        player.clientState = 'title';
+        this.sendClientData(player);
         // consider also updating the match to check for win condition here
         return match;
     }
@@ -206,8 +215,9 @@ class Game {
             }
         }
         match.players.forEach(p => {
+            p.clientState = 'ingame';
             const overwrite = overwriteAllPlayerClient ? true : overwriteThisPlayerClient && p === player ? true : false;
-            this.sendClientMatchData(p, overwrite);
+            this.sendClientData(p, overwrite);
         });
     }
 
@@ -238,6 +248,10 @@ class Game {
             if (key !== playerId) filteredPlayers[key] = this.players[key];
         }
         this.players = filteredPlayers;
+        for (const id in this.players) {
+            this.sendClientData(this.players[id]);
+        }
+        this.startMatches();
     }
 }
 

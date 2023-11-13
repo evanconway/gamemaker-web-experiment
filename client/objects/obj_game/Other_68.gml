@@ -26,8 +26,8 @@ if (type == network_type_data) {
 	debug_log($"Data received: {json_string}");
 	try {
 		var temp_data = json_parse(json_string);
-		game_data = temp_data[$ "data"];
-		application_state = temp_data[$ "clientState"];
+		game_data = variable_struct_exists(temp_data, "data") ? temp_data[$ "data"] : game_data;
+		application_state = variable_struct_exists(temp_data, "clientState") ? temp_data[$ "clientState"] : application_state;
 		// feather ignore once GM1011
 		if (game_data[$ "overwriteClient"]) {
 			// feather ignore once GM1041
