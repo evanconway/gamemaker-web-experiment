@@ -23,6 +23,7 @@
     {"id":{"name":"snd_type","path":"sounds/snd_type/snd_type.yy",},},
     {"id":{"name":"snd_delete","path":"sounds/snd_delete/snd_delete.yy",},},
     {"id":{"name":"snd_type_wrong","path":"sounds/snd_type_wrong/snd_type_wrong.yy",},},
+    {"id":{"name":"snd_music","path":"sounds/snd_music/snd_music.yy",},},
     {"id":{"name":"Util","path":"scripts/Util/Util.yy",},},
     {"id":{"name":"obj_camera","path":"objects/obj_camera/obj_camera.yy",},},
     {"id":{"name":"snd_success","path":"sounds/snd_success/snd_success.yy",},},

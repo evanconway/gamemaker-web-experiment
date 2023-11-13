@@ -3,8 +3,11 @@ if (my_player_id == "") exit;
 var match_state = game_data[$ "matchState"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
-	ready_time = 10000000;
+	ready_time = 10666666;
+	play_sound(snd_music, 1);
 }
+
+if (application_state != "ingame") audio_stop_sound(snd_music);
 
 if (application_state == "title") {
 	if (keyboard_check_pressed(vk_anykey)) {
@@ -44,6 +47,12 @@ if (application_state == "title") {
 			to_send[$ "match_event"] = "update";
 			to_send[$ "typed"] = typed;
 		}
+	} else {
+		debug_log("got the word");
+	}
+	
+	if (lowered_typed == lowered_word) {
+		debug_log("see what happens");
 	}
 	
 	if (to_send[$ "match_event"] != "") send_server_data("update_match", to_send);

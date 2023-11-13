@@ -1,4 +1,4 @@
-global.domain = "206.81.8.93";
+global.domain = "localhost";
 
 /**
  * Takes a struct, stringifies it as JSON, writes it to a buffer.
@@ -66,7 +66,7 @@ function draw_text_centered(text, v_offset=0) {
 /**
  * @param {Asset.GMSound}
  */
-function play_sound(sound, amplitude = 0.3) {
+function play_sound(sound, amplitude = 0.7) {
 	audio_stop_sound(sound);
 	audio_play_sound(sound, 0, false, amplitude);
 }

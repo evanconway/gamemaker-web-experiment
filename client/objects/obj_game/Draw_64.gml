@@ -43,9 +43,10 @@ if (application_state == "connecting_to_server") {
 	draw_set_alpha(1);
 	
 	if (match_state == "play" && ready_time > 0) {
-		if (ready_time > 8000000) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
-		else if (ready_time > 6000000) draw_text_centered($"{array_length(players)} typists");
-		else if (ready_time > 3000000) draw_text_centered($"first to finish wins");
+		var interval = 2666666;
+		if (ready_time > interval * 4) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
+		else if (ready_time > interval * 3) draw_text_centered($"{array_length(players)} typists");
+		else if (ready_time > interval* 2) draw_text_centered($"first to finish wins");
 		else draw_text_centered($"game starts in: {floor(ready_time / 1000000) + 1}");
 	}
 	if (match_state == "play" && ready_time <= 0) {

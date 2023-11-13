@@ -124,8 +124,10 @@ class Game {
     }
 
     startMatches() {
+        const numPlayersConnected = Object.keys(this.players).length;
+        if (numPlayersConnected <= 0) return;
         // aim for max players, but if less than that are connected use what we have
-        const matchPlayerTarget = Math.min(PLAYERS_PER_GAME, Object.keys(this.players).length);
+        const matchPlayerTarget = Math.min(PLAYERS_PER_GAME, numPlayersConnected);
         // players in game should get sent ingame state
         // all other players in queue should receive queued state
         while (this.queue.length >= matchPlayerTarget) {
