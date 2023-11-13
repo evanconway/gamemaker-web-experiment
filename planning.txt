@@ -214,3 +214,5 @@ Added a descent bar display. It's starting to feel like a game now. I decided it
 we've cleaned up the server client communication. We actually did a sort of deployment to test. Just the server. It's working as expected so far, but haven't tested thoroughly yet. Maybe we'll see if we can also do a test deployment of the client.
 
 Note, the server behaves slightly weirdly. 
+
+We fixed server and client bugs. Tried to deploy but were stumped by secuirty issues. We need to make our web socket server secure. Luckily we've touched on that a bit and left ourselves notes. Hopefully tomorrow we can fix the security issue, and spend the rest of the week improving the game aspects of this project.
