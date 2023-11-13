@@ -44,10 +44,10 @@ if (application_state == "connecting_to_server") {
 	
 	if (match_state == "play" && ready_time > 0) {
 		var interval = 2666666;
-		if (ready_time > interval * 4) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
-		else if (ready_time > interval * 3) draw_text_centered($"{array_length(players)} typists");
-		else if (ready_time > interval* 2) draw_text_centered($"first to finish wins");
-		else draw_text_centered($"game starts in: {floor(ready_time / 1000000) + 1}");
+		if (ready_time > interval * 3) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
+		else if (ready_time > interval * 2) draw_text_centered($"{array_length(players)} typists");
+		else if (ready_time > interval* 1) draw_text_centered($"first to finish wins");
+		else draw_text_centered($"game starts in: {floor(ready_time / 1000000)}");
 	}
 	if (match_state == "play" && ready_time <= 0) {
 		draw_set_color(c_dkgray);

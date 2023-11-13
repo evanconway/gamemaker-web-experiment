@@ -4,10 +4,10 @@ var match_state = game_data[$ "matchState"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
 	ready_time = 10666666;
-	play_sound(snd_music, 1);
+	play_sound(snd_music, 0.8);
 }
 
-if (application_state != "ingame") audio_stop_sound(snd_music);
+if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);
 
 if (application_state == "title") {
 	if (keyboard_check_pressed(vk_anykey)) {

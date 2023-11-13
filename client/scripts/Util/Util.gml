@@ -66,7 +66,7 @@ function draw_text_centered(text, v_offset=0) {
 /**
  * @param {Asset.GMSound}
  */
-function play_sound(sound, amplitude = 0.7) {
+function play_sound(sound, amplitude = 0.9) {
 	audio_stop_sound(sound);
 	audio_play_sound(sound, 0, false, amplitude);
 }
