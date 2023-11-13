@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import fs from 'fs';
 
 const PLAYERS_PER_GAME = 10;
-const WORDS_TO_WIN = 40;
+const WORDS_TO_WIN = 60;
 
 // very bad practice! fix later
 let WORDS: Array<string> = [];
@@ -14,7 +14,7 @@ fs.readFile('./src/words.txt', 'utf8', (err, data) => {
     // this line behaves differently in different environments!
     // windows:     \r\n
     // macos/linux: \n
-    WORDS = data.split('\n');
+    WORDS = data.split('\r\n');
     console.log(`${WORDS.length} words loaded`);
 });
 

@@ -17,3 +17,5 @@ setup();
 window_center();
 
 show_debug_message($"camera port width: ${view_get_wport(0)}");
+
+//window_set_fullscreen(true);

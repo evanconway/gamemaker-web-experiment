@@ -22,6 +22,6 @@ function send_server_data(event, data) {
 	}, socket);
 }
 
-ready_time = 1; // game countdown once match starts
+ready_time = 9999999; // game countdown once match starts
 
 typed = ""; // only overwritten by server on round reset

@@ -41,16 +41,19 @@ if (application_state == "connecting_to_server") {
 	
 	draw_set_color(c_white);
 	draw_set_alpha(1);
-	
+	var interval = 2666666;
 	if (match_state == "play" && ready_time > 0) {
 		var num_of_players = array_length(players);
-		var interval = 2666666;
 		if (ready_time > interval * 3) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
 		else if (ready_time > interval * 2) draw_text_centered($"{num_of_players} typist{num_of_players > 1 ? "s" : ""}");
-		else if (ready_time > interval* 1) draw_text_centered($"first to finish wins");
-		else draw_text_centered($"game starts in: {floor(ready_time / 1000000) + 1}");
+		else if (ready_time > interval* 1) {
+			var threshold = interval * 1.5;
+			draw_set_alpha(ready_time > threshold ? 1 : (ready_time - interval) / (interval / 2));
+			draw_text_centered($"first to finish wins");
+			draw_set_alpha(1);
+		} else draw_text_centered($"game starts in: {floor(ready_time / (interval / 4)) + 1}", -30);
 	}
-	if (match_state == "play" && ready_time <= 0) {
+	if (match_state == "play" && ready_time <= interval) {
 		draw_set_color(c_dkgray);
 		for (var i = 1; i < array_length(game_data[$ "words"]); i++) {
 			var word = game_data[$ "words"][i];

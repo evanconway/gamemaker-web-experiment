@@ -1,4 +1,4 @@
-global.domain = "206.81.8.93";
+global.domain = "localhost";
 
 /**
  * Takes a struct, stringifies it as JSON, writes it to a buffer.
@@ -39,13 +39,10 @@ function get_text_pressed() {
 	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	for (var i = 1; i <= string_length(alphabet); i++) {
 		var char = string_char_at(alphabet, i);
-		if (keyboard_check_pressed(ord(char))) {
-			result += char;
-		}
+		if (keyboard_check_pressed(ord(char))) result += char;
 	}
 	return result;
 }
-
 
 /**
  * Draw text centered on the screen. Should only be called
@@ -57,7 +54,6 @@ function get_text_pressed() {
 function draw_text_centered(text, v_offset=0) {
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
-	draw_set_alpha(1);
 	var draw_x = display_get_gui_width() / 2;
 	var draw_y = display_get_gui_height() / 2;
 	draw_text(draw_x, draw_y + v_offset, text);
@@ -68,5 +64,5 @@ function draw_text_centered(text, v_offset=0) {
  */
 function play_sound(sound, amplitude = 0.9) {
 	audio_stop_sound(sound);
-	audio_play_sound(sound, 0, false, amplitude);
+	audio_play_sound(sound, 0, false, amplitude * 0.7);
 }
