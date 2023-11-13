@@ -5,7 +5,7 @@ socket = -1;
 my_player_id = "";
 debug_log("starting socket connection...");
 socket = network_create_socket(network_socket_ws);
-network_connect_raw_async(socket, global.domain, 5000);
+network_connect_raw_async(socket, global.domain, 8443);
 
 application_state = "connecting_to_server";
 application_state_prev = application_state;

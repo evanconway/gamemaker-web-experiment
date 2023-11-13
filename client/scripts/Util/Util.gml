@@ -1,4 +1,5 @@
 global.domain = "localhost";
+global.debug = true;
 
 /**
  * Takes a struct, stringifies it as JSON, writes it to a buffer.
@@ -23,8 +24,6 @@ function send_struct_on_socket(struct, socket) {
 	network_send_raw(socket, buffer, buffer_get_size(buffer));
 	buffer_delete(buffer);
 }
-
-global.debug = false;
 
 /**
  * @param {any} msg

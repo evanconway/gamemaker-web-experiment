@@ -17,7 +17,8 @@ for (var i = 0; i < array_length(keys); i++) {
 }
 
 if (type == network_type_non_blocking_connect) {
-	debug_log($"Socket connection established!");
+	var success = async_load[$ "succeeded"] ? "Socket connection established!" : "Could not establish socket connection.";
+	debug_log(success);
 }
 
 if (type == network_type_data) {

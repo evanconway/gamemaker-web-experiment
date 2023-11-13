@@ -1,6 +1,6 @@
 width = 320;
 height = 180;
-multiplier = 7;
+multiplier = 4;
 
 setup = function() {
 	view_enabled = true;
@@ -15,7 +15,5 @@ setup = function() {
 setup();
 
 window_center();
-
-show_debug_message($"camera port width: ${view_get_wport(0)}");
 
 //window_set_fullscreen(true);
