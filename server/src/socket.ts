@@ -14,6 +14,7 @@ const startSocketServer = () => {
 
     //pass in your credentials to create an https server
     const httpsServer = https.createServer(credentials);
+    httpsServer.listen(port, () => console.log(`https server listening on port: ${port}`));
 
     const socketWebServer = new WebSocketServer({ server: httpsServer }, () => {
         console.log(`WEB socket server is running on port: ${port}`);
@@ -47,8 +48,6 @@ const startSocketServer = () => {
             game.deletePlayer(socketPlayerId);
         });
     });
-
-    httpsServer.listen(port, () => console.log(`https server listening on port: ${port}`));
 };
 
 export default startSocketServer;
