@@ -1,8 +1,16 @@
 import { v4 as uuid } from "uuid";
 import fs from 'fs';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const PLAYERS_PER_GAME = 10;
 const WORDS_TO_WIN = 60;
+
+const wordFileSplit = process.env.WORD_LINE_SPLIT;
+if (wordFileSplit === undefined) console.error('no line split in .env file');
+
+console.log(wordFileSplit);
 
 // very bad practice! fix later
 let WORDS: Array<string> = [];
@@ -11,10 +19,7 @@ fs.readFile('./src/words.txt', 'utf8', (err, data) => {
       console.error(err);
       return;
     }
-    // this line behaves differently in different environments!
-    // windows:     \r\n
-    // macos/linux: \n
-    WORDS = data.split('\n');
+    WORDS = data.split(wordFileSplit === undefined ? '\n' : wordFileSplit);
     console.log(`${WORDS.length} words loaded`);
 });
 
