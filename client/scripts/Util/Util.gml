@@ -1,4 +1,3 @@
-global.domain = "localhost";
 global.debug = true;
 
 /**
