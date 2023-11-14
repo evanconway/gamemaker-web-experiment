@@ -4,8 +4,15 @@ socket = -1;
 
 my_player_id = "";
 debug_log("starting socket connection...");
+
+var secure = true;
+var port = secure ? 443 : 5000;
+var ws_url = $"ws{secure ? "s" : ""}://localhost";
+
+show_debug_message($"{ws_url}:{port}");
+
 socket = network_create_socket(network_socket_ws);
-network_connect_raw_async(socket, global.domain, 8443);
+network_connect_raw_async(socket, ws_url, port);
 
 application_state = "connecting_to_server";
 application_state_prev = application_state;

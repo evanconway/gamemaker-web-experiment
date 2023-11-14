@@ -6,8 +6,8 @@ import https from 'https';
 import http from 'http';
 
 const startSocketServer = () => {
-    const secure = false;
-    const port = 8443;
+    const secure = true;
+    const port = secure ? 443 : 5000;
     
     const privateKey = fs.readFileSync('ssl-cert/private.key', 'utf8');
     const certificate = fs.readFileSync('ssl-cert/cert.crt', 'utf8');
