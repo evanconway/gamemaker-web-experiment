@@ -2,15 +2,13 @@ import { WebSocketServer, Server } from 'ws';
 import fs from 'fs';
 import game, { ClientState, ReceivedEvent, SendPlayerData } from "./game";
 
+import https from 'https';
+
 const startSocketServer = () => {
-    // read ssl certificate
-    var privateKey = fs.readFileSync('ssl-cert/private.key', 'utf8');
-    var certificate = fs.readFileSync('ssl-cert/cert.crt', 'utf8');
-
-    var credentials = { key: privateKey, cert: certificate };
-    var https = require('https');
-
     const port = 8443;
+    const privateKey = fs.readFileSync('ssl-cert/private.key', 'utf8');
+    const certificate = fs.readFileSync('ssl-cert/cert.crt', 'utf8');
+    const credentials = { key: privateKey, cert: certificate };
 
     //pass in your credentials to create an https server
     const httpsServer = https.createServer(credentials);
