@@ -263,4 +263,6 @@ After doing that though... we should consider an idea another RCer had: a typing
 
 I've decided we shouldn't work on the battle royale idea right now. This project is close enough to presentable as is. Let's finish it and move on to something else.
 
+One more major feature we need is the ability to disconnect idle players. I'm thinking we could simply setup the client to attempt to reconnect if the socket connection is broken. But setup the server to disconnect a client if they've been inactive for... 10 seconds? I think it's better to make it super aggressive, but we'll play with it. Let's do that next since it's important.
 
+Finally we should add an accuracy and WPM rating at the end. A friend requested this feature. 

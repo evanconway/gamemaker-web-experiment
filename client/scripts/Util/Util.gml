@@ -20,8 +20,9 @@ function struct_to_buffer(struct) {
  */
 function send_struct_on_socket(struct, socket) {
 	var buffer = struct_to_buffer(struct);
-	network_send_raw(socket, buffer, buffer_get_size(buffer));
+	var result = network_send_raw(socket, buffer, buffer_get_size(buffer));
 	buffer_delete(buffer);
+	return result;
 }
 
 /**
