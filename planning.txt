@@ -216,3 +216,27 @@ we've cleaned up the server client communication. We actually did a sort of depl
 Note, the server behaves slightly weirdly. 
 
 We fixed server and client bugs. Tried to deploy but were stumped by secuirty issues. We need to make our web socket server secure. Luckily we've touched on that a bit and left ourselves notes. Hopefully tomorrow we can fix the security issue, and spend the rest of the week improving the game aspects of this project.
+
+
+14th of November,
+
+Yesterday, the 13th, we spent the whole day trying to get certs figured out locally. We got far but not quite all the way there. Today we were able to make more progress and learned a few things.
+
+Firstly, trying to get a browser and computer to trust a localhost secure connection is a pain, and probably not worth the trouble usually. I wanted to do this to confirm that my server was correctly starting using the secure protocol. Ultimately I couldn't really check, but I was able to get it started using the same "structure" using http. 
+
+To test the client connecting to the server over https, we used ngrok. This makes a remote proxy that tunnels to my locally hosted application. And the proxy endpoint uses https. Once I was able to confirm the client connected to the remote proxy using https. I figured out how to make a 3rd party signed cert using certbot. Unfortunately this required a domain name. 
+
+Purchasing a domain name wasn't that hard. But it's clear I know very little about how domains are registered, and what a DNS record is. I just followed some video that said to point an A tag and www tag at the ip address of my digital ocean server.
+
+I also added DNS records in my digitl ocean server. But I'm not sure those did anything??
+
+After getting the domain ready. I was able to create a 3rd party signed cert (the correct way) using certbot. This is an automated service (that's free somehow) which uses Let's Encrypt. I don't understand how this stuff is free but whatever. It worked.
+
+I had to reconfigure my server a bit to work better, but once done the server code was running on my domain over a secure connection. Once that was done the GameMaker client was actually very easy. We just put in the correct url. 
+
+And so, deployment is, in a sense, finished. At least for this project. We're not completely done, and there's a lot more I'd like to learn someday. But I'm not going to expand on deployment for this project more than I have.
+
+
+So now let's focus on features that aren't right. Friend specifically requested that word advances immediately on completion. He said the delay from the server throws him off. I completely agree with this change. Let's see if we can get the wordlist to send only when match starts. And the client won't overwrite it's locally stored wordlist unless specified. Secondly I think the music synch with the intro is off. I bet it's possible to read the time-played of the track and bass animations off that instead of updating a separate variable and measuring that.
+
+Let's address the word list and lag issue first.
