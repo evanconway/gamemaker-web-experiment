@@ -240,3 +240,6 @@ And so, deployment is, in a sense, finished. At least for this project. We're no
 So now let's focus on features that aren't right. Friend specifically requested that word advances immediately on completion. He said the delay from the server throws him off. I completely agree with this change. Let's see if we can get the wordlist to send only when match starts. And the client won't overwrite it's locally stored wordlist unless specified. Secondly I think the music synch with the intro is off. I bet it's possible to read the time-played of the track and bass animations off that instead of updating a separate variable and measuring that.
 
 Let's address the word list and lag issue first.
+
+I believe we properly addressed the lag issue. Need some real testing first to know for sure. Next let's address the music synching.
+

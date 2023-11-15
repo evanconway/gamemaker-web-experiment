@@ -3,20 +3,18 @@ if (my_player_id == "") exit;
 var match_state = game_data[$ "matchState"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
-	ready_time = 10666666;
-	play_sound(snd_music, 0.8);
+	music = play_sound(snd_music, 0.8);
 }
 
 if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);
 
+var track_time = audio_sound_get_track_position(music);
+
 if (application_state == "title") {
-	ready_time = 9999999;
 	if (keyboard_check_pressed(vk_anykey)) {
 		send_server_data("player_add_to_queue", { player_id: my_player_id });
 	}
-} else if (application_state == "ingame" && match_state == "play" && ready_time > 0) {
-	ready_time -= delta_time;
-} else if (application_state == "ingame" && match_state == "play" && ready_time <= 0) {
+} else if (application_state == "ingame" && match_state == "play" && track_time > music_intro_time) {
 	var to_send = { player_id: my_player_id, match_event: "" };
 	
 	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];

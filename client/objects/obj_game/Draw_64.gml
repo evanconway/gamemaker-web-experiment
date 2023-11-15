@@ -41,19 +41,23 @@ if (application_state == "connecting_to_server") {
 	
 	draw_set_color(c_white);
 	draw_set_alpha(1);
-	var interval = 2666666;
-	if (match_state == "play" && ready_time > 0) {
-		var num_of_players = array_length(players);
-		if (ready_time > interval * 3) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
-		else if (ready_time > interval * 2) draw_text_centered($"{num_of_players} typist{num_of_players > 1 ? "s" : ""}");
-		else if (ready_time > interval* 1) {
-			var threshold = interval * 1.5;
-			draw_set_alpha(ready_time > threshold ? 1 : (ready_time - interval) / (interval / 2));
-			draw_text_centered($"first to finish wins");
+	var track_time = audio_sound_get_track_position(music);
+	var music_interval = music_intro_time / 4;
+	var num_of_players = array_length(players);
+	if (match_state == "play" && track_time < music_intro_time) {
+		if (track_time < music_interval * 1) draw_text_centered($"type {game_data[$ "wordsToWin"]} words");
+		else if (track_time < music_interval * 2) draw_text_centered($"{num_of_players} typist{num_of_players > 1 ? "s" : ""}");
+		else if (track_time < music_interval * 3) {
+			if (track_time > (music_intro_time * 5/8) && track_time < (music_intro_time *3/4)) {
+				var fade_time = music_interval / 2;
+				var new_alpha = (music_intro_time * 3/4 - track_time)  / fade_time;
+				draw_set_alpha(new_alpha);
+			} else draw_set_alpha(1);
+			draw_text_centered(num_of_players > 1 ? "first to finish wins" : "finish to win");
 			draw_set_alpha(1);
-		} else draw_text_centered($"game starts in: {floor(ready_time / (interval / 4)) + 1}", -30);
+		} else draw_text_centered($"game starts in: {floor((music_intro_time - track_time) / (music_interval / 4)) + 1}", -30);
 	}
-	if (match_state == "play" && ready_time <= interval) {
+	if (match_state == "play" && track_time >= music_interval * 3) {
 		draw_set_color(c_dkgray);
 		var max_word_display_index = min(match_word_index + 6, array_length(match_words));
 		var draw_y = 1;
@@ -62,7 +66,7 @@ if (application_state == "connecting_to_server") {
 			draw_text_centered(word, entry_height * draw_y);
 			draw_y++;
 		}
-		draw_set_color(ready_time <= 0 ? c_white : c_dkgray);
+		draw_set_color(track_time < music_intro_time ? c_dkgray : c_white);
 		if (match_word_index < array_length(match_words)) draw_text_centered(match_words[match_word_index]);
 	}
 	if (match_state == "results") {

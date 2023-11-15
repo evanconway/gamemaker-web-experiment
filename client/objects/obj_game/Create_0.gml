@@ -33,6 +33,10 @@ function send_server_data(event, data) {
 	}, socket);
 }
 
-ready_time = 0; // game countdown once match starts
-
 typed = ""; // only overwritten by server on round reset
+
+music = -1;
+
+// entire time in seconds of the intro
+// intro is 4 measures
+music_intro_time = 10.666666;
