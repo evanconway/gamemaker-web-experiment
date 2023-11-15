@@ -227,7 +227,6 @@ game
 often
 yet
 line
-political
 end
 among
 ever
@@ -252,7 +251,6 @@ five
 once
 white
 least
-president
 learn
 real
 change
@@ -425,7 +423,6 @@ town
 road
 drive
 arm
-federal
 break
 difference
 thank
@@ -717,7 +714,6 @@ outside
 arrive
 analysis
 benefit
-sex
 forward
 lawyer
 present
@@ -827,7 +823,6 @@ fish
 particular
 camera
 structure
-politics
 perform
 bit
 weight
@@ -875,7 +870,6 @@ hotel
 soldier
 reflect
 heavy
-sexual
 bag
 heat
 marriage
@@ -1411,7 +1405,6 @@ married
 instrument
 predict
 weather
-presidential
 emotional
 commitment
 supreme
@@ -1555,7 +1548,6 @@ estate
 guide
 circumstance
 snow
-politician
 steal
 pursue
 slip
@@ -1600,7 +1592,6 @@ forth
 frame
 typical
 except
-conservative
 eliminate
 host
 hall
@@ -1708,7 +1699,6 @@ vast
 resolution
 household
 fewer
-abortion
 apart
 witness
 match
@@ -1732,7 +1722,6 @@ definitely
 bomb
 enormous
 tone
-liberal
 massive
 engineer
 wheel
@@ -1980,7 +1969,6 @@ implement
 essentially
 gene
 enforcement
-vs
 sauce
 independence
 marketing
@@ -2239,10 +2227,7 @@ phrase
 ingredient
 stake
 fiber
-activist
 snap
-terrorism
-refugee
 incorporate
 hip
 ultimate
@@ -2430,7 +2415,6 @@ regularly
 working
 singer
 evolve
-shooting
 partly
 unknown
 offense
@@ -2438,14 +2422,12 @@ counter
 potentially
 thirty
 justify
-protest
 crash
 craft
 treaty
 terrorist
 insight
 possess
-politically
 tap
 extensive
 episode
@@ -2948,7 +2930,6 @@ stem
 surgeon
 acceptable
 physics
-rape
 counsel
 jeans
 hunt
@@ -3469,7 +3450,6 @@ automatic
 diamond
 credibility
 import
-sexually
 divine
 sentiment
 cart
@@ -3664,7 +3644,6 @@ incredibly
 isolation
 sock
 eleven
-sexy
 entrepreneur
 syndrome
 bureau
@@ -3788,7 +3767,6 @@ shy
 trash
 disabled
 gross
-damn
 hormone
 texture
 pencil
@@ -4098,7 +4076,6 @@ authorize
 cottage
 driveway
 charm
-sexuality
 loyal
 clay
 balloon
