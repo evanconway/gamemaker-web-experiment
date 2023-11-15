@@ -5,7 +5,7 @@ socket = -1;
 my_player_id = "";
 debug_log("starting socket connection...");
 
-var use_deploy = false;
+var use_deploy = true;
 var port = use_deploy ? 443 : 5000;
 var domain = use_deploy ? "tyghrufj.online" : "localhost";
 var ws_url = $"ws{use_deploy ? "s" : ""}://{domain}";

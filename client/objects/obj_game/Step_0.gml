@@ -37,7 +37,7 @@ if (application_state == "title") {
 	if (lowered_typed != lowered_word || match_word_index < max_index) {
 		typed += get_text_pressed();
 		if (keyboard_check_pressed(vk_backspace)) {
-			typed = string_delete(typed, string_length(typed), 1);
+			typed = keyboard_check(vk_control) ? "" : string_delete(typed, string_length(typed), 1);
 		}
 		lowered_typed = string_lower(typed); // reassign lowered value after typing
 		if (typed_pre_input != typed) {
