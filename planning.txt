@@ -243,3 +243,13 @@ Let's address the word list and lag issue first.
 
 I believe we properly addressed the lag issue. Need some real testing first to know for sure. Next let's address the music synching.
 
+Found a couple bugs after last test:
+
+1. Players retain their "typed" value between matches. So you see the last thing they typed at the start of the next match.
+
+2. When the music finishes, the game freezes because the gameplay is based on the music track position. 
+
+Observations:
+
+1. Mistyped sound is not noticeable enough.
+2. Typed words should be displayed directly above target word. 
