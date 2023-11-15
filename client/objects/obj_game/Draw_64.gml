@@ -26,7 +26,7 @@ if (application_state == "connecting_to_server") {
 		draw_set_color(player_color);
 		draw_set_alpha(1);
 		var is_you = player.id == my_player_id;
-		var player_typed_display = string_lower($"{is_you ? "YOU" : "OPP"}: \"{is_you ? typed : text}\"");
+		var player_typed_display = string_lower($"{is_you ? "you" : "opponent:"} {is_you ? "" : text}");
 		var h_spacer = 10;
 		var draw_y = is_you ? 0 : entry_height * (i_y + 1);
 		draw_text(h_spacer, draw_y, player_typed_display);
