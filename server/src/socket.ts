@@ -45,7 +45,6 @@ const startSocketServer = () => {
             const dataObj = JSON.parse(dataString);
             const event = dataObj['event'] as ReceivedEvent;
             game.handleMessageReceived(event, dataObj['data']);
-            
         });
 
         ws.on('error', (err) => {
