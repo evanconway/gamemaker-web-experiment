@@ -31,33 +31,34 @@ if (application_state == "title") {
 	var typed_pre_input = typed;
 	
 	var lowered_typed = string_lower(typed);
-	var lowered_word = string_lower(game_data[$ "words"][game_data[$ "playersWordIndex"]]);
+	var lowered_word = string_lower(match_words[match_word_index]);
 	
-	// don't allow input if player already has word
-	if (lowered_typed != lowered_word) {
+	var max_index = array_length(match_words) - 1;
+	
+	// don't allow input if player already has word and has typed all words
+	if (lowered_typed != lowered_word || match_word_index < max_index) {
 		typed += get_text_pressed();
 		if (keyboard_check_pressed(vk_backspace)) {
 			typed = string_delete(typed, string_length(typed), 1);
 		}
 		lowered_typed = string_lower(typed); // reassign lowered value after typing
 		if (typed_pre_input != typed) {
-			if (lowered_word == lowered_typed) play_sound(snd_success);
-			else if (string_length(typed_pre_input) > string_length(typed)) play_sound(snd_delete);
+			if (lowered_word == lowered_typed) {
+				play_sound(snd_success);
+				typed = match_word_index == max_index ? typed : "";
+				match_word_index = min(match_word_index + 1, max_index);
+			} else if (string_length(typed_pre_input) > string_length(typed)) play_sound(snd_delete);
 			else if (string_starts_with(lowered_word, lowered_typed)) play_sound(snd_type);
 			else play_sound(snd_type_wrong);
 			to_send[$ "match_event"] = "update";
 			to_send[$ "typed"] = typed;
+			to_send[$ "match_word_index"] = match_word_index;
 		}
-	} else {
-		debug_log("got the word");
-	}
-	
-	if (lowered_typed == lowered_word) {
-		debug_log("see what happens");
 	}
 	
 	if (to_send[$ "match_event"] != "") send_server_data("update_match", to_send);
 } else if (application_state == "ingame" && match_state == "results") {
+	match_words = [];
 	if (keyboard_check_pressed(ord("Q"))) {
 		send_server_data("update_match", {
 			player_id: my_player_id,

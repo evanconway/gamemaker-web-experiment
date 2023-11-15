@@ -55,12 +55,15 @@ if (application_state == "connecting_to_server") {
 	}
 	if (match_state == "play" && ready_time <= interval) {
 		draw_set_color(c_dkgray);
-		for (var i = 1; i < array_length(game_data[$ "words"]); i++) {
-			var word = game_data[$ "words"][i];
-			draw_text_centered(word, entry_height * i);
+		var max_word_display_index = min(match_word_index + 6, array_length(match_words));
+		var draw_y = 1;
+		for (var i = match_word_index + 1; i < max_word_display_index; i++) {
+			var word = match_words[i];
+			draw_text_centered(word, entry_height * draw_y);
+			draw_y++;
 		}
 		draw_set_color(ready_time <= 0 ? c_white : c_dkgray);
-		draw_text_centered(game_data[$ "words"][0]);
+		if (match_word_index < array_length(match_words)) draw_text_centered(match_words[match_word_index]);
 	}
 	if (match_state == "results") {
 		var won = game_data.victor.id == my_player_id;

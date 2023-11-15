@@ -19,6 +19,9 @@ application_state = "connecting_to_server";
 application_state_prev = application_state;
 game_data = {};
 
+match_word_index = 0;
+match_words = [];
+
 /**
  * @param {string} event
  * @param {struct} data

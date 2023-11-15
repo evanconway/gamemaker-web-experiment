@@ -54,6 +54,11 @@ interface Match {
     players: Array<Player>,
 }
 
+interface UpdateClientOptions {
+    overwriteClient: boolean,       // forces client to overwrite existing data with new state
+    includeMatchWordList?: boolean,  // include entire match word list
+}
+
 export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_match';
 
 type MatchEvent = 'update' | 'quit' | 'player_dropped';
@@ -77,25 +82,18 @@ class Game {
         return undefined;
     }
 
-    sendClientData(player: Player, overwriteClient=false) {
+    sendClientData(player: Player, options: UpdateClientOptions = { overwriteClient: false }) {
         const sendData = player.sendState;
         if (sendData === undefined) return;
         const match = this.getPlayerMatch(player);
-        const playerWords = new Array<string>();
-        if (match !== undefined) {
-            const playerWordIndex = match.playersWordIndex[player.id];
-            for (let i = playerWordIndex; (i < playerWordIndex + 10) && (i < match.words.length); i++) { 
-                playerWords.push(match.words[i]);
-            }
-        }
         const matchData = match === undefined ? undefined : {
             players: match.players,
             playersWordIndex: match.playersWordIndex,
             wordsToWin: WORDS_TO_WIN,
             matchState: match.state,
             victor: match.victor,
-            words: playerWords,
-            overwriteClient,
+            words: options.includeMatchWordList ? match.words : undefined,
+            overwriteClient: options.overwriteClient,
         };
         sendData(player.clientState, {
             your_player_id: player.id,
@@ -135,6 +133,7 @@ class Game {
         const matchPlayerTarget = Math.min(PLAYERS_PER_GAME, numPlayersConnected);
         // players in game should get sent ingame state
         // all other players in queue should receive queued state
+        const playersSendWordList = new Set<string>();
         while (this.queue.length >= matchPlayerTarget) {
             const newMatchPlayersArray: Array<Player> = [];
             const matchId = uuid();
@@ -142,7 +141,8 @@ class Game {
                 const newPlayer = this.queue.shift();
                 if (newPlayer !== undefined) {
                     newMatchPlayersArray.push(newPlayer);
-                    console.log(`player id: ${newPlayer?.id} entered match id: ${matchId}`);
+                    playersSendWordList.add(newPlayer.id);
+                    console.log(`player id: ${newPlayer.id} entered match id: ${matchId}`);
                 }
             }
             const playersWordIndex: Record<string, number> = {};
@@ -165,7 +165,10 @@ class Game {
             const match = this.matches[key];
             match.players.forEach(p => {
                 p.clientState = 'ingame';
-                this.sendClientData(p);
+                this.sendClientData(p, {
+                    overwriteClient: false,
+                    includeMatchWordList: playersSendWordList.has(p.id),
+                });
             });
         }
     }
@@ -202,18 +205,18 @@ class Game {
             this.removePlayerFromMatch(player);
         } else if (match.state === 'play') {
             const newTyped = data['typed'];
+            const newWordIndex = data['match_word_index'];
             if (newTyped !== undefined) player.typed = newTyped;
+            if (newWordIndex !== undefined) {
+                match.playersWordIndex[player.id] = newWordIndex;
+            }
             const targetWord = match.words[match.playersWordIndex[player.id]];
-            if (player.typed.toLowerCase() === targetWord.toLowerCase()) {
-                overwriteThisPlayerClient = true;
-                match.playersWordIndex[player.id]++;
-                player.typed = '';
-                if (match.playersWordIndex[player.id] >= match.words.length) {
-                    overwriteAllPlayerClient = true;
-                    console.log(`player won, id: ${player.id}`);
-                    match.victor = player;
-                    match.state = 'results';
-                }
+            const targetIndex = match.words.length - 1;
+            if (match.playersWordIndex[player.id] === targetIndex && player.typed.toLowerCase() === targetWord) {
+                overwriteAllPlayerClient = true;
+                console.log(`player won, id: ${player.id}`);
+                match.victor = player;
+                match.state = 'results';
             }
         } else if (match.state === 'results') {
             if (matchEvent === 'quit') {
@@ -223,7 +226,7 @@ class Game {
         match.players.forEach(p => {
             p.clientState = 'ingame';
             const overwrite = overwriteAllPlayerClient ? true : overwriteThisPlayerClient && p === player ? true : false;
-            this.sendClientData(p, overwrite);
+            this.sendClientData(p, { overwriteClient: overwrite });
         });
     }
 

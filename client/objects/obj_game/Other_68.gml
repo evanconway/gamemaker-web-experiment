@@ -17,25 +17,24 @@ for (var i = 0; i < array_length(keys); i++) {
 }
 
 if (type == network_type_non_blocking_connect) {
-	var success = async_load[$ "succeeded"] ? "Socket connection established!" : "Could not establish socket connection.";
+	var success = async_load[? "succeeded"] ? "Socket connection established!" : "Could not establish socket connection.";
 	debug_log(success);
 }
 
 if (type == network_type_data) {
-	var buffer = ds_map_find_value(async_load, "buffer");
+	var buffer = async_load[? "buffer"];
 	var json_string = buffer_read(buffer, buffer_string);
 	debug_log($"Data received: {json_string}");
 	try {
 		var temp_data = json_parse(json_string);
 		game_data = variable_struct_exists(temp_data, "data") ? temp_data[$ "data"] : game_data;
 		application_state = variable_struct_exists(temp_data, "clientState") ? temp_data[$ "clientState"] : application_state;
-		// feather ignore once GM1011
-		if (game_data[$ "overwriteClient"]) {
-			// feather ignore once GM1041
-			for (var i = 0; i < array_length(game_data.players); i++) {
-				// feather ignore once GM1028
-				if (game_data.players[i].id == my_player_id) typed = game_data.players[i].typed;
-			}
+		
+		// "words" only appears on match start, reset for match start
+		if (variable_struct_exists(game_data, "words")) {
+			typed = "";
+			match_word_index = 0;
+			match_words = game_data[$ "words"];
 		}
 	} catch(err) {}
 	if (variable_struct_exists(game_data, "your_player_id")) {
