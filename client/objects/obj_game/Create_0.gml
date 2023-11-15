@@ -7,7 +7,7 @@ debug_log("starting socket connection...");
 
 var secure = true;
 var port = secure ? 443 : 5000;
-var ws_url = $"ws{secure ? "s" : ""}://localhost";
+var ws_url = $"ws{secure ? "s" : ""}://tyghrufj.online";
 
 show_debug_message($"{ws_url}:{port}");
 
