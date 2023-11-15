@@ -26,10 +26,11 @@ if (application_state == "connecting_to_server") {
 		draw_set_alpha(1);
 		var is_you = player.id == my_player_id;
 		var player_typed_display = string_lower($"{is_you ? "YOU" : "OPP"}: \"{is_you ? typed : text}\"");
-		draw_text(0, entry_height * i, player_typed_display);
+		var h_spacer = 10;
+		draw_text(h_spacer, entry_height * i, player_typed_display);
 		var progress = game_data[$ "playersWordIndex"][$ player.id] / game_data[$ "wordsToWin"];
 		draw_set_halign(fa_right);
-		draw_text(display_get_gui_width(), entry_height * i, $"{floor(progress * 100)}%");
+		draw_text(display_get_gui_width() - h_spacer, entry_height * i, $"{floor(progress * 100)}%");
 		draw_set_halign(fa_left);
 		
 		if (match_state != "results") {
