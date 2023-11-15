@@ -42,7 +42,6 @@ if (application_state == "connecting_to_server") {
 	
 	draw_set_color(c_white);
 	draw_set_alpha(1);
-	var track_time = audio_sound_get_track_position(music);
 	var music_interval = music_intro_time / 4;
 	var num_of_players = array_length(players);
 	if (match_state == "play" && track_time < music_intro_time) {

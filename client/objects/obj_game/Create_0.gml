@@ -40,3 +40,5 @@ music = -1;
 // entire time in seconds of the intro
 // intro is 4 measures
 music_intro_time = 10.666666;
+
+track_time = 0;

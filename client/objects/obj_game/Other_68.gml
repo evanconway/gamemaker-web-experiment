@@ -35,6 +35,7 @@ if (type == network_type_data) {
 			typed = "";
 			match_word_index = 0;
 			match_words = game_data[$ "words"];
+			track_time = 0;
 		}
 	} catch(err) {}
 	if (variable_struct_exists(game_data, "your_player_id")) {

@@ -3,12 +3,12 @@ if (my_player_id == "") exit;
 var match_state = game_data[$ "matchState"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
-	music = play_sound(snd_music, 0.8);
+	music = play_sound(snd_music, 0.8, true);
 }
 
 if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);
 
-var track_time = audio_sound_get_track_position(music);
+track_time = max(track_time, audio_sound_get_track_position(music));
 
 if (application_state == "title") {
 	if (keyboard_check_pressed(vk_anykey)) {
