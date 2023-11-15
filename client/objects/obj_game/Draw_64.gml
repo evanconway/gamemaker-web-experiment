@@ -67,7 +67,30 @@ if (application_state == "connecting_to_server") {
 			draw_y++;
 		}
 		draw_set_color(track_time < music_intro_time ? c_dkgray : c_white);
-		if (match_word_index < array_length(match_words)) draw_text_centered(match_words[match_word_index]);
+		var target_word = match_words[match_word_index];
+		if (match_word_index < array_length(match_words)) draw_text_centered(target_word);
+		
+		// draw typed correct/error
+		var correct = "";
+		var error = "";
+		var add_to_correct = true;
+		for (var i = 1; i <= string_length(typed); i++) {
+			if (!add_to_correct || string_char_at(typed, i) != string_char_at(target_word, i)) {
+				add_to_correct = false;
+			}
+			if (add_to_correct) correct += string_char_at(typed, i);
+			else error += string_char_at(typed, i);
+		}
+		
+		draw_set_halign(fa_left);
+		draw_set_valign(fa_top);
+		var error_x = display_get_gui_width() / 2 - string_width(target_word) / 2;
+		var error_y = display_get_gui_height() / 2 - string_height(target_word) / 2;
+		
+		draw_set_color(c_lime);
+		draw_text(error_x, error_y - 14, correct);
+		draw_set_color(c_red);
+		draw_text(error_x + string_width(correct), error_y - 14, error);
 	}
 	if (match_state == "results") {
 		var won = game_data.victor.id == my_player_id;

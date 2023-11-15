@@ -253,3 +253,12 @@ Observations:
 
 1. Mistyped sound is not noticeable enough.
 2. Typed words should be displayed directly above target word. 
+
+
+15th of Novemeber, 2023
+
+Managed to fix the typed value persisting between matches bug, and the client freezing on music end bug. Next, add a much clearer display for what words you're typing. And I realized it shouldn't be too hard to highlight correct letters in green and wrong ones in red.
+
+After doing that though... we should consider an idea another RCer had: a typing battle royale??? That could work by having a bunch of typists in one game, and a massive string of words to type. But there's one AI typist who slowly gets faster and faster, and if you are overtaken by this AI, you lose. That's like the typing equivalent of the circle in shooter royales.
+
+

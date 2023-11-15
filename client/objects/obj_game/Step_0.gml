@@ -27,26 +27,23 @@ if (application_state == "title") {
 
 	var player = players[my_index];
 	var typed_pre_input = typed;
-	
-	var lowered_typed = string_lower(typed);
-	var lowered_word = string_lower(match_words[match_word_index]);
-	
+	var target_word = string_lower(match_words[match_word_index]);
 	var max_index = array_length(match_words) - 1;
 	
 	// don't allow input if player already has word and has typed all words
-	if (lowered_typed != lowered_word || match_word_index < max_index) {
+	if (typed != target_word || match_word_index < max_index) {
 		typed += get_text_pressed();
 		if (keyboard_check_pressed(vk_backspace)) {
 			typed = keyboard_check(vk_control) ? "" : string_delete(typed, string_length(typed), 1);
 		}
-		lowered_typed = string_lower(typed); // reassign lowered value after typing
+		typed = string_lower(typed); // reassign lowered value after typing
 		if (typed_pre_input != typed) {
-			if (lowered_word == lowered_typed) {
+			if (target_word == typed) {
 				play_sound(snd_success);
 				typed = match_word_index == max_index ? typed : "";
 				match_word_index = min(match_word_index + 1, max_index);
 			} else if (string_length(typed_pre_input) > string_length(typed)) play_sound(snd_delete);
-			else if (string_starts_with(lowered_word, lowered_typed)) play_sound(snd_type);
+			else if (string_starts_with(target_word, typed)) play_sound(snd_type);
 			else play_sound(snd_type_wrong);
 			to_send[$ "match_event"] = "update";
 			to_send[$ "typed"] = typed;

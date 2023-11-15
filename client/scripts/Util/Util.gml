@@ -52,8 +52,8 @@ function get_text_pressed() {
 function draw_text_centered(text, v_offset=0) {
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
-	var draw_x = display_get_gui_width() / 2;
-	var draw_y = display_get_gui_height() / 2;
+	var draw_x = floor(display_get_gui_width() / 2);
+	var draw_y = floor(display_get_gui_height() / 2);
 	draw_text(draw_x, draw_y + v_offset, text);
 }
 
@@ -62,5 +62,5 @@ function draw_text_centered(text, v_offset=0) {
  */
 function play_sound(sound, amplitude = 0.9, loop = false) {
 	audio_stop_sound(sound);
-	return audio_play_sound(sound, 0, loop, amplitude);
+	return audio_play_sound(sound, 0, false, amplitude);
 }
