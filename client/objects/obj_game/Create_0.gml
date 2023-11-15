@@ -5,9 +5,10 @@ socket = -1;
 my_player_id = "";
 debug_log("starting socket connection...");
 
-var secure = true;
-var port = secure ? 443 : 5000;
-var ws_url = $"ws{secure ? "s" : ""}://tyghrufj.online";
+var use_deploy = false;
+var port = use_deploy ? 443 : 5000;
+var domain = use_deploy ? "tyghrufj.online" : "localhost";
+var ws_url = $"ws{use_deploy ? "s" : ""}://{domain}";
 
 show_debug_message($"{ws_url}:{port}");
 
