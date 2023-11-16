@@ -2,12 +2,18 @@ if (my_player_id == "") exit;
 
 var match_state = game_data[$ "matchState"];
 
+var music_amp = 0.8;
+
 if (application_state_prev != "ingame" && application_state == "ingame") {
-	music = play_sound(snd_music, 0.8, true);
+	music = play_sound(snd_music, music_amp, true);
 	send_server_data("ping", {});
 }
 
 if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);
+if (match_state != "results") {
+	audio_stop_sound(snd_music_hit);
+	music_end = -1;
+}
 
 track_time = max(track_time, audio_sound_get_track_position(music));
 
@@ -68,6 +74,7 @@ if (application_state == "title") {
 	
 	if (to_send[$ "match_event"] != "") send_server_data("update_match", to_send);
 } else if (application_state == "ingame" && match_state == "results") {
+	if (music_end == -1) music_end = play_sound(snd_music_hit, music_amp);
 	if (keyboard_check_pressed(ord("Q"))) {
 		send_server_data("update_match", {
 			player_id: my_player_id,

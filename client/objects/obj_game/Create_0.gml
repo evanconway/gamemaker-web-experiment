@@ -64,6 +64,7 @@ function send_server_data(event, data) {
 typed = ""; // only overwritten by server on round reset
 
 music = -1;
+music_end = -1;
 
 // entire time in seconds of the intro
 // intro is 4 measures
