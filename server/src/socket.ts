@@ -31,7 +31,6 @@ const startSocketServer = () => {
     });
 
     socketWebServer.on('connection', function connection(ws) {
-        console.log('connection event');
         const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
             clientState,
             data,
@@ -42,11 +41,9 @@ const startSocketServer = () => {
         const resetCientTimeout = () => {
             clearTimeout(clientTimeout);
             clientTimeout = setTimeout(() => {
-                console.log(`removing player due to timeout id: ${socketPlayerId}`);
                 game.deletePlayer(socketPlayerId);
                 ws.close();
             }, 20000);
-            console.log("timeout set");
         };
         resetCientTimeout();
 

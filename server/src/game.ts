@@ -10,8 +10,6 @@ const WORDS_TO_WIN = 60;
 const wordFileSplit = process.env.WORD_LINE_SPLIT;
 if (wordFileSplit === undefined) console.error('no line split in .env file');
 
-console.log(wordFileSplit);
-
 // very bad practice! fix later
 let WORDS: Array<string> = [];
 fs.readFile('./src/words.txt', 'utf8', (err, data) => {
