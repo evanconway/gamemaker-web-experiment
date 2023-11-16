@@ -1781,7 +1781,6 @@ plus
 immigrant
 weak
 illegal
-hi
 alternative
 interaction
 column
@@ -3574,7 +3573,6 @@ ruin
 sheer
 immune
 reliability
-ass
 alongside
 bush
 exotic
