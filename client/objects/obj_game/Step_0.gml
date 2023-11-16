@@ -12,6 +12,7 @@ track_time = max(track_time, audio_sound_get_track_position(music));
 
 if (application_state == "title") {
 	if (keyboard_check_pressed(vk_anykey)) {
+		debug_log("any key pressed on title");
 		send_server_data("player_add_to_queue", { player_id: my_player_id });
 	}
 } else if (application_state == "ingame" && match_state == "play" && track_time > music_intro_time) {

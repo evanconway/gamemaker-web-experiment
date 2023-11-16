@@ -1,4 +1,4 @@
-global.debug = false;
+global.debug = true;
 
 /**
  * Takes a struct, stringifies it as JSON, writes it to a buffer.
@@ -19,6 +19,7 @@ function struct_to_buffer(struct) {
  * @param {Id.Socket} socket
  */
 function send_struct_on_socket(struct, socket) {
+	debug_log($"sending over socket: {socket}");
 	var buffer = struct_to_buffer(struct);
 	var result = network_send_raw(socket, buffer, buffer_get_size(buffer));
 	buffer_delete(buffer);

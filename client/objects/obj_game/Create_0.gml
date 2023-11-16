@@ -1,15 +1,13 @@
 draw_set_font(fnt_game);
 
-my_player_id = "";
-debug_log("starting socket connection...");
-
-var use_deploy = true;
+var use_deploy = false;
 port = use_deploy ? 443 : 5000;
 var domain = use_deploy ? "tyghrufj.online" : "localhost";
 ws_url = $"ws{use_deploy ? "s" : ""}://{domain}";
 
 show_debug_message($"{ws_url}:{port}");
 
+my_player_id = "";
 application_state = "connecting_to_server";
 application_state_prev = application_state;
 game_data = {};
@@ -20,6 +18,8 @@ track_time = 0;
 
 socket = network_create_socket(network_socket_ws);
 connect_to_server = function() {
+	debug_log("starting socket connection...");
+	my_player_id = "";
 	application_state = "connecting_to_server";
 	application_state_prev = application_state;
 	game_data = {};
@@ -43,6 +43,7 @@ function send_server_data(event, data) {
 		event: event,
 		data: data,
 	}, socket);
+	debug_log($"send server data: ${sent}");
 	if (sent < 0) {
 		connect_to_server();
 	}

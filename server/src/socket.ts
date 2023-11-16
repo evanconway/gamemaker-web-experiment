@@ -1,4 +1,4 @@
-import { WebSocketServer, Server } from 'ws';
+import { WebSocketServer } from 'ws';
 import fs from 'fs';
 import dotenv from "dotenv";
 import game, { ClientState, ReceivedEvent, SendPlayerData } from "./game";
@@ -14,6 +14,8 @@ const pathToCert = process.env['PATH_TO_CERT'];
 if (secure === undefined) throw new Error('SCURE not defined in .env');
 if (pathToKey === undefined) throw new Error('PATH_TO_KEY not defined in .env');
 if (pathToCert === undefined) throw new Error('PATH_TO_CERT not defined in .env');
+
+let connectionNumber = 0;
 
 const startSocketServer = () => {
     const port = secure ? 443 : 5000;
@@ -31,14 +33,29 @@ const startSocketServer = () => {
     });
 
     socketWebServer.on('connection', function connection(ws) {
+        const thisConnectionNumber = connectionNumber++;
         const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
             clientState,
             data,
         }));
         const socketPlayerId = game.addPlayer(sendState);
-        console.log(`client connected player id: ${socketPlayerId}`);
+        console.log(`connection num: ${thisConnectionNumber}, client connected player id: ${socketPlayerId}`);
         
+        let clientTimeout: NodeJS.Timeout | undefined = undefined;
+        const resetCientTimeout = () => {
+            clearTimeout(clientTimeout);
+            clientTimeout = setTimeout(() => {
+                console.log(`removing player due to timeout con#: ${thisConnectionNumber}, id: ${socketPlayerId}`);
+                game.deletePlayer(socketPlayerId);
+                ws.close();
+            }, 30000);
+            console.log("timeout set");
+        };
+        resetCientTimeout();
+
         ws.on('message', function message(data) {
+            console.log('message', data);
+            resetCientTimeout();
             const rawString = data.toString();
             // game maker needs to create buffers 1 byte longer than the content
             const dataString = rawString.slice(0, rawString.length - 1);

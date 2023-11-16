@@ -266,3 +266,5 @@ I've decided we shouldn't work on the battle royale idea right now. This project
 One more major feature we need is the ability to disconnect idle players. I'm thinking we could simply setup the client to attempt to reconnect if the socket connection is broken. But setup the server to disconnect a client if they've been inactive for... 10 seconds? I think it's better to make it super aggressive, but we'll play with it. Let's do that next since it's important.
 
 Finally we should add an accuracy and WPM rating at the end. A friend requested this feature. 
+
+It appears that socket connections don't magically know if they're still open or not. So although the server can force a connection closed. The client doesn't know it's closed. We'll have to write some sort of system where the client checks if the connection is still open at certain points.
