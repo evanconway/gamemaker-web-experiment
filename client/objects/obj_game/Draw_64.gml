@@ -31,7 +31,8 @@ if (application_state == "connecting_to_server") {
 		var draw_y = is_you ? 0 : entry_height * (i_y + 1);
 		draw_text(h_spacer, draw_y, player_typed_display);
 		var progress = game_data[$ "playersWordIndex"][$ player.id] / game_data[$ "wordsToWin"];
-		
+		var won = variable_struct_exists(game_data, "victor") && game_data.victor.id == player.id;
+		if (won) progress = 1;
 		draw_set_halign(fa_right);
 		draw_text(display_get_gui_width() - h_spacer, draw_y, $"{floor(progress * 100)}%");
 		draw_set_halign(fa_left);
