@@ -4,6 +4,7 @@ var match_state = game_data[$ "matchState"];
 
 if (application_state_prev != "ingame" && application_state == "ingame") {
 	music = play_sound(snd_music, 0.8, true);
+	send_server_data("ping", {});
 }
 
 if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);

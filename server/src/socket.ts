@@ -15,8 +15,6 @@ if (secure === undefined) throw new Error('SCURE not defined in .env');
 if (pathToKey === undefined) throw new Error('PATH_TO_KEY not defined in .env');
 if (pathToCert === undefined) throw new Error('PATH_TO_CERT not defined in .env');
 
-let connectionNumber = 0;
-
 const startSocketServer = () => {
     const port = secure ? 443 : 5000;
 
@@ -33,34 +31,33 @@ const startSocketServer = () => {
     });
 
     socketWebServer.on('connection', function connection(ws) {
-        const thisConnectionNumber = connectionNumber++;
+        console.log('connection event');
         const sendState: SendPlayerData = (clientState: ClientState, data: any) => ws.send(JSON.stringify({
             clientState,
             data,
         }));
         const socketPlayerId = game.addPlayer(sendState);
-        console.log(`connection num: ${thisConnectionNumber}, client connected player id: ${socketPlayerId}`);
         
         let clientTimeout: NodeJS.Timeout | undefined = undefined;
         const resetCientTimeout = () => {
             clearTimeout(clientTimeout);
             clientTimeout = setTimeout(() => {
-                console.log(`removing player due to timeout con#: ${thisConnectionNumber}, id: ${socketPlayerId}`);
+                console.log(`removing player due to timeout id: ${socketPlayerId}`);
                 game.deletePlayer(socketPlayerId);
                 ws.close();
-            }, 30000);
+            }, 20000);
             console.log("timeout set");
         };
         resetCientTimeout();
 
         ws.on('message', function message(data) {
-            console.log('message', data);
             resetCientTimeout();
             const rawString = data.toString();
             // game maker needs to create buffers 1 byte longer than the content
             const dataString = rawString.slice(0, rawString.length - 1);
             const dataObj = JSON.parse(dataString);
             const event = dataObj['event'] as ReceivedEvent;
+            if (event === 'ping') return;
             game.handleMessageReceived(event, dataObj['data']);
         });
 

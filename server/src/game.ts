@@ -59,7 +59,7 @@ interface UpdateClientOptions {
     includeMatchWordList?: boolean,  // include entire match word list
 }
 
-export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_match';
+export type ReceivedEvent = 'connect_player_id' | 'player_add_to_queue' | 'update_match' | 'ping';
 
 type MatchEvent = 'update' | 'quit' | 'player_dropped';
 
