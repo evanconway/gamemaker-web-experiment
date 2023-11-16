@@ -1,4 +1,4 @@
-global.debug = true;
+global.debug = false;
 
 /**
  * Takes a struct, stringifies it as JSON, writes it to a buffer.

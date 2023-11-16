@@ -5,7 +5,7 @@ port = use_deploy ? 443 : 5000;
 var domain = use_deploy ? "tyghrufj.online" : "localhost";
 ws_url = $"ws{use_deploy ? "s" : ""}://{domain}";
 
-show_debug_message($"{ws_url}:{port}");
+debug_log($"{ws_url}:{port}");
 
 my_player_id = "";
 application_state = "connecting_to_server";
