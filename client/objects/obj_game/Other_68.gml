@@ -32,11 +32,8 @@ if (type == network_type_data) {
 		
 		// "words" only appears on match start, reset for match start
 		if (variable_struct_exists(game_data, "words")) {
-			typed = "";
-			match_word_index = 0;
+			reset_match_data();
 			match_words = game_data[$ "words"];
-			words_completed = 0;
-			track_time = 0;
 		}
 	} catch(err) {}
 	if (variable_struct_exists(game_data, "your_player_id")) {

@@ -23,6 +23,7 @@ if (application_state == "title") {
 		send_server_data("ping", {});
 	}
 } else if (application_state == "ingame" && match_state == "play" && track_time > music_intro_time) {
+	match_time += delta_time / 1000000;
 	var to_send = { player_id: my_player_id, match_event: "" };
 	
 	var players = variable_struct_exists(game_data, "players") ? variable_struct_get(game_data, "players") : [];
@@ -40,11 +41,16 @@ if (application_state == "title") {
 	
 	// don't allow input if player already has word and has typed all words
 	if (typed != target_word || match_word_index < max_index) {
-		typed += get_text_pressed();
+		var new_text = get_text_pressed();
+		if (new_text != "") {
+			typed += new_text;
+			if (string_starts_with(target_word, typed)) types_correct += 1;	
+			else types_error += 1;
+		}
+		
 		if (keyboard_check_pressed(vk_backspace)) {
 			typed = keyboard_check(vk_control) ? "" : string_delete(typed, string_length(typed), 1);
 		}
-		typed = string_lower(typed); // reassign lowered value after typing
 		if (typed_pre_input != typed) {
 			if (target_word == typed) {
 				play_sound(snd_success);

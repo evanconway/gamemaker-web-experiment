@@ -13,9 +13,23 @@ application_state_prev = application_state;
 game_data = {};
 match_word_index = 0;
 match_words = [];
+match_time = 0; // amount of time match has taken in seconds
+types_correct = 0;
+types_error = 0;
 typed = "";
 track_time = 0;
 words_completed = 0; // local value only, for tracking stats
+
+reset_match_data = function() {
+	match_word_index = 0;
+	match_words = [];
+	match_time = 0; // amount of time match has taken in seconds
+	types_correct = 0;
+	types_error = 0;
+	typed = "";
+	track_time = 0;
+	words_completed = 0; // local value only, for tracking stats
+};
 
 socket = network_create_socket(network_socket_ws);
 connect_to_server = function() {
@@ -24,10 +38,7 @@ connect_to_server = function() {
 	application_state = "connecting_to_server";
 	application_state_prev = application_state;
 	game_data = {};
-	match_word_index = 0;
-	match_words = [];
-	typed = "";
-	track_time = 0;
+	reset_match_data();
 	network_destroy(socket);
 	socket = network_create_socket(network_socket_ws);
 	network_connect_raw_async(socket, ws_url, port);

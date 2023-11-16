@@ -41,7 +41,7 @@ function get_text_pressed() {
 		var char = string_char_at(alphabet, i);
 		if (keyboard_check_pressed(ord(char))) result += char;
 	}
-	return result;
+	return string_lower(result);
 }
 
 /**

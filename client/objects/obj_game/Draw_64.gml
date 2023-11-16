@@ -96,7 +96,12 @@ if (application_state == "connecting_to_server") {
 	}
 	if (match_state == "results") {
 		var won = game_data.victor.id == my_player_id;
-		draw_text_centered($"Game complete.\n{ won ? "You won!" : "You lost."}\nPress Q to continue.");
+		draw_text_centered($"Game complete.\n{ won ? "You won!" : "You lost."}\nPress Q to continue.", -20);
+		draw_set_color(c_aqua);
+		var wpm = words_completed / (match_time / 60);
+		draw_text_centered($"WPM: {wpm}", 20);
+		var accuracy = floor(types_correct / (types_correct + types_error) * 100);
+		draw_text_centered($"Accuracy: {accuracy}%", 34);
 	}
 } else {
 	draw_text(0, 0, "game state not recognized");
