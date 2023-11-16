@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const PLAYERS_PER_GAME = 10;
-const WORDS_TO_WIN = 10;
+const WORDS_TO_WIN = 100;
 
 const wordFileSplit = process.env.WORD_LINE_SPLIT;
 if (wordFileSplit === undefined) console.error('no line split in .env file');
