@@ -1,6 +1,6 @@
 draw_set_font(fnt_game);
 
-var use_deploy = false;
+var use_deploy = true;
 port = use_deploy ? 443 : 5000;
 var domain = use_deploy ? "tyghrufj.online" : "localhost";
 ws_url = $"ws{use_deploy ? "s" : ""}://{domain}";
@@ -15,6 +15,7 @@ match_word_index = 0;
 match_words = [];
 typed = "";
 track_time = 0;
+words_completed = 0; // local value only, for tracking stats
 
 socket = network_create_socket(network_socket_ws);
 connect_to_server = function() {

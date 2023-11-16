@@ -50,6 +50,7 @@ if (application_state == "title") {
 				play_sound(snd_success);
 				typed = match_word_index == max_index ? typed : "";
 				match_word_index = min(match_word_index + 1, max_index);
+				words_completed += 1;
 			} else if (string_length(typed_pre_input) > string_length(typed)) play_sound(snd_delete);
 			else if (string_starts_with(target_word, typed)) play_sound(snd_type);
 			else play_sound(snd_type_wrong);
@@ -61,7 +62,6 @@ if (application_state == "title") {
 	
 	if (to_send[$ "match_event"] != "") send_server_data("update_match", to_send);
 } else if (application_state == "ingame" && match_state == "results") {
-	match_words = [];
 	if (keyboard_check_pressed(ord("Q"))) {
 		send_server_data("update_match", {
 			player_id: my_player_id,

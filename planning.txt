@@ -268,3 +268,8 @@ One more major feature we need is the ability to disconnect idle players. I'm th
 Finally we should add an accuracy and WPM rating at the end. A friend requested this feature. 
 
 It appears that socket connections don't magically know if they're still open or not. So although the server can force a connection closed. The client doesn't know it's closed. We'll have to write some sort of system where the client checks if the connection is still open at certain points.
+
+I think I was misunderstanding how my own system worked. We didn't need to make some sort of ping-pong timeout system. I believe, assuming further testing doesn't reveal mistakes, timeouts are working as intended.
+
+So for the last few things, let's try and get WPM and accuracy in there.
+
