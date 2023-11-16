@@ -16,6 +16,12 @@ if (application_state == "title") {
 		debug_log("any key pressed on title");
 		send_server_data("player_add_to_queue", { player_id: my_player_id });
 	}
+} else if (application_state == "queued") {
+	searching_ping_time -= delta_time;
+	if (searching_ping_time <= 0) {
+		searching_ping_time = 5000000;
+		send_server_data("ping", {});
+	}
 } else if (application_state == "ingame" && match_state == "play" && track_time > music_intro_time) {
 	var to_send = { player_id: my_player_id, match_event: "" };
 	

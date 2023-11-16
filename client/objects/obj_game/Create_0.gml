@@ -56,3 +56,5 @@ music = -1;
 // entire time in seconds of the intro
 // intro is 4 measures
 music_intro_time = 10.666666;
+
+searching_ping_time = 0; // when 0, ping server while searching for game
