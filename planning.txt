@@ -255,7 +255,7 @@ Observations:
 2. Typed words should be displayed directly above target word. 
 
 
-15th of Novemeber, 2023
+15th of November, 2023
 
 Managed to fix the typed value persisting between matches bug, and the client freezing on music end bug. Next, add a much clearer display for what words you're typing. And I realized it shouldn't be too hard to highlight correct letters in green and wrong ones in red.
 
@@ -273,3 +273,14 @@ I think I was misunderstanding how my own system worked. We didn't need to make 
 
 So for the last few things, let's try and get WPM and accuracy in there.
 
+
+17th of November, 2023
+
+After adding those last few small features and fixing a couple bugs, we were able to playtest with people. Ran into a few issues:
+
+1. People had troubling queing together. I think the current timeout system is bad. Check if client still pings server when alt-tabbed
+2. One person's browser didn't accept key presses?? I'm not sure if this is my issue or something wrong with gx games. Need to explore.
+
+Also had conversation about how to scale up using firebase. Need to think if I want to just be done with this or keep working.
+
+For now, just learned client doesn't run in background if user tabs away. So we could remove our whole system of only pinging server while queued. And just have the client ping all the time. But let's put a lot of space between those pings.

@@ -4,9 +4,15 @@ var match_state = game_data[$ "matchState"];
 
 var music_amp = 0.8;
 
+// ping server every 5 seconds whil active
+searching_ping_time -= delta_time;
+if (searching_ping_time <= 0) {
+	searching_ping_time = 5000000;
+	send_server_data("ping", {});
+}
+
 if (application_state_prev != "ingame" && application_state == "ingame") {
 	music = play_sound(snd_music, music_amp, true);
-	send_server_data("ping", {});
 }
 
 if (application_state != "ingame" || match_state != "play") audio_stop_sound(snd_music);
@@ -21,12 +27,6 @@ if (application_state == "title") {
 	if (keyboard_check_pressed(vk_anykey)) {
 		debug_log("any key pressed on title");
 		send_server_data("player_add_to_queue", { player_id: my_player_id });
-	}
-} else if (application_state == "queued") {
-	searching_ping_time -= delta_time;
-	if (searching_ping_time <= 0) {
-		searching_ping_time = 5000000;
-		send_server_data("ping", {});
 	}
 } else if (application_state == "ingame" && match_state == "play" && track_time > music_intro_time) {
 	match_time += delta_time / 1000000;

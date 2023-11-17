@@ -43,7 +43,7 @@ const startSocketServer = () => {
             clientTimeout = setTimeout(() => {
                 game.deletePlayer(socketPlayerId);
                 ws.close();
-            }, 20000);
+            }, 25000);
         };
         resetCientTimeout();
 
