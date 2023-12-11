@@ -15,7 +15,7 @@
   "isEcma": false,
   "LibraryEmitters": [],
   "MetaData": {
-    "IDEVersion": "2023.8.1.102",
+    "IDEVersion": "2023.11.0.121",
   },
   "resources": [
     {"id":{"name":"obj_game","path":"objects/obj_game/obj_game.yy",},},
