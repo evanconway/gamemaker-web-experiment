@@ -22,6 +22,7 @@
     {"id":{"name":"snd_music_hit","path":"sounds/snd_music_hit/snd_music_hit.yy",},},
     {"id":{"name":"fnt_game","path":"fonts/fnt_game/fnt_game.yy",},},
     {"id":{"name":"snd_type","path":"sounds/snd_type/snd_type.yy",},},
+    {"id":{"name":"obj_title","path":"objects/obj_title/obj_title.yy",},},
     {"id":{"name":"snd_delete","path":"sounds/snd_delete/snd_delete.yy",},},
     {"id":{"name":"snd_type_wrong","path":"sounds/snd_type_wrong/snd_type_wrong.yy",},},
     {"id":{"name":"snd_music","path":"sounds/snd_music/snd_music.yy",},},
